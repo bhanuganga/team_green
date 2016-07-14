@@ -21,7 +21,7 @@ class Main:
                 manager_instance.add_event(e)
 
             elif command == 2:
-                event_id = str(raw_input("Event Id:"))
+                event_id = raw_input("Event Id:")
                 manager_instance.remove_event_by_id(event_id)
 
 x = Main()

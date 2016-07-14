@@ -11,15 +11,17 @@ class Manager:
         self.j.write_to_json({str(k): event_instance.__dict__})
         print("Remember this event id:{} for future purposes".format(k))
 
-    #def remove_event_by_id(self, event_id):
-        #d = self.j.read_from_json()
-        #if event_id in d:
-         #   del d[event_id]
+    def remove_event_by_id(self, event_id):
+        d = self.j.read_from_json()
+        if event_id in d:
+            del d[str(event_id)]
+            print d
+            self.j.write_to_json(d)
 
 
 class JsonHandler:
     def __init__(self):
-        self.file = "abc.txt"
+        self.file = "abc.json"
 
     def write_to_json(self, x):
         storage = self.read_from_json()
@@ -28,7 +30,7 @@ class JsonHandler:
                 json.dump(x, f)
             else:
                 storage.update(x)
-                f.write(json.dumps(storage))
+                json.dump(storage, f, indent=2)
 
     def read_from_json(self):
         with open(self.file, "r+") as f:
