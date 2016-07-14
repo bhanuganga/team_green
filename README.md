@@ -1,3 +1,3 @@
-# team_green
+# Team_green
 
-Events App
+**Events App**
