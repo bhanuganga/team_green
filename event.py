@@ -30,5 +30,3 @@ class Event(object):
     def get_info(self):
         return self.info
 
-    def to_json(self):
-        pass
