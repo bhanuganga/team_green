@@ -32,6 +32,12 @@ class Main(object):
             m.delete_event_by_id(raw_input("enter the event id :"))
 
         elif choice == 5:
+            pass
+
+        elif choice == 6:
+            pass
+
+        elif choice == 7:
             m.events_in_date_range(str(date(int(raw_input("enter year(yyyy) :")),
                                             int(raw_input("enter month(mm) :")),
                                             int(raw_input("enter day(dd) :")))),
@@ -39,11 +45,6 @@ class Main(object):
                                             int(raw_input("enter month(mm) :")),
                                             int(raw_input("enter day(dd) :")))))
 
-        elif choice == 6:
-            pass
-
-        elif choice == 7:
-            pass
 
         elif choice == 8:
             break
