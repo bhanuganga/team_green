@@ -7,11 +7,11 @@ class Event(object):
             set_value(input), get_value() are common for all attributes, where value=Attribute.
     """
 
-    def __init__(self):
-        self.name = ""
-        self.date = ""
-        self.city = ""
-        self.info = ""
+    def __init__(self,name,date,city,info):
+        self.name =name
+        self.date = date
+        self.city = city
+        self.info = info
 
     def set_name(self, name):
         self.name = name

@@ -25,68 +25,65 @@ class Manager(object):
     def add_event(self, event_instance):
         id = uuid.uuid4()
         self.json_instance.dump_file({str(id): event_instance.__dict__})
-        print "Use this id: {} for future purpose!".format(id)
+        return id
 
     def read_event_by_id(self, event_id):
         storage = self.json_instance.load_file()
         if event_id in storage:
-            event_instance = Event()
-            event_instance.set_name(storage[event_id]['name'])
-            print "Name : ",  event_instance.get_name()
-            event_instance.set_date(storage[event_id]['date'])
-            print "Date : ", event_instance.get_date()
-            event_instance.set_city(storage[event_id]['city'])
-            print "City : ", event_instance.get_city()
-            event_instance.set_info(storage[event_id]['info'])
-            print "Info : ", event_instance.get_info()
+            event_instance = Event(storage[event_id]['name'],
+                                   storage[event_id]['date'],
+                                   storage[event_id]['city'],
+                                   storage[event_id]['info'])
+
+            return event_instance
         else:
-            print "{} event id does not exist".format(event_id)
+            return event_id
 
     def update_event_by_id(self, event_id, key, change):
-        self.json_instance.update_event_in_file(event_id, key, change)
+        return self.json_instance.update_event_in_file(event_id, key, change)
 
     def delete_event_by_id(self, event_id):
-        self.json_instance.delete_event_in_file(event_id)
+        return self.json_instance.delete_event_in_file(event_id)
 
     def events_in_date_range(self, date1, date2):
         storage = self.json_instance.load_file()
-        print ""
+        final_list=[]
         for event_id in storage:
-            if storage[event_id]['date'] > date1 and  storage[event_id]['date'] < date2 :
-                self.read_event_by_id(event_id)
-                print "********************"
+            if storage[event_id]['date'] >= date1 and storage[event_id]['date'] <= date2:
+                final_list.append(event_id)
+        return final_list
 
-    def list_event_by_date(self,date):
-        storage=self.json_instance.load_file()
-        count = 1
-        for key, value in storage.iteritems():
-            if value['date']==date:
-                print '{}'.format(count)
-                self.read_event_by_id(key)
-                count += 1
-    def list_event_by_city(self,city):
+    def list_event_by_date(self, date):
         storage = self.json_instance.load_file()
-        count = 1
+        final_list=[]
+        for key, value in storage.iteritems():
+            if value['date'] == date:
+                final_list.append(key)
+        return final_list
+
+    def list_event_by_city(self, city):
+        storage = self.json_instance.load_file()
+        final_list=[]
         for key, value in storage.iteritems():
             if value['city'] == city:
-                print '{}'.format(count)
-                self.read_event_by_id(key)
-                count += 1
+                final_list.append(key)
+        return final_list
 
-    def list_event_by_date_and_city(self,date,city):
+    def list_event_by_date_and_city(self, date, city):
         storage = self.json_instance.load_file()
-        count = 1
+        final_list=[]
         for key, value in storage.iteritems():
-            if value['date'] == date and value['city']==city:
-                print '{}'.format(count)
-                self.read_event_by_id(key)
-                count += 1
+            if value['date'] == date and value['city'] == city:
+                final_list.append(key)
+        return final_list
+
 
     def today_upcoming_and_completed_events(self):
         temp_data = self.json_instance.load_file()
         today_list = []
         upcoming_list = []
         past_list = []
+        final_list = []
         for key, value in temp_data.items():
             if value['date'] == str(date.today()):
                 today_list.append(key)
@@ -94,18 +91,7 @@ class Manager(object):
                 upcoming_list.append(key)
             else:
                 past_list.append(key)
-        print("Today's Event(s):")
-        print("-" * 16)
-        for k in today_list:
-            print('')
-            self.read_event_by_id(k)
-        print("\nUpcoming Event(s):")
-        print("-" * 17)
-        for j in upcoming_list:
-            print('')
-            self.read_event_by_id(j)
-        print("\nPast Event(s):")
-        print("-" * 13)
-        for j in past_list:
-            print('')
-            self.read_event_by_id(j)
+        final_list.append(today_list)
+        final_list.append(upcoming_list)
+        final_list.append(past_list)
+        return final_list
