@@ -1,0 +1,20 @@
+{
+  "5c30d864-efc2-4cd4-a3c8-33548c9f494f": {
+    "date": "2016-04-02", 
+    "city": "ban", 
+    "info": "boardexam", 
+    "name": "intermediate"
+  }, 
+  "a185e41b-5bc2-454d-a65c-ef838584f2d8": {
+    "date": "2015-03-01", 
+    "city": "hyd", 
+    "info": "farewell", 
+    "name": "tenth"
+  }, 
+  "3d806737-df4a-4587-a6c5-30f5fb097f3a": {
+    "date": "2017-05-22", 
+    "city": "pune", 
+    "info": "placements", 
+    "name": "btech"
+  }
+}

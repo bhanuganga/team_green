@@ -1,4 +1,11 @@
+"""Event class to create a structure"""
 class Event(object):
+    """Event class
+        Attributes:
+            name, information, date, city, country
+        Methods:
+            set_value(input), get_value() are common for all attributes, where value=Attribute.
+    """
 
     def __init__(self):
         self.name = ""
