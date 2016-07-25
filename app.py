@@ -17,7 +17,6 @@ def read():
                 return 'id {} does not exist'.format(id)
             else:
                 storage.update({id: x.__dict__})
-
     return render_template('search_result.html', storage=storage)
 
 
@@ -109,32 +108,44 @@ def delete():
 def by_date():
     if request.method == 'POST':
         a = manager_instance.list_event_by_date(request.form['date'])
-        message = ','.join(a)
-        return redirect(url_for('read', list_of_event_ids=message))
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
 
 
 @app.route('/by_city', methods=['POST', 'GET'])
 def by_city():
     if request.method == 'POST':
         a = manager_instance.list_event_by_city(request.form['city'])
-        message = ','.join(a)
-        return redirect(url_for('read', list_of_event_ids=message))
+        if a==[]:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
 
 
 @app.route('/by_date_and_city', methods=['POST', 'GET'])
 def by_date_and_city():
     if request.method == 'POST':
         a = manager_instance.list_event_by_date_and_city(request.form['date'], request.form['city'])
-        message = ','.join(a)
-        return redirect(url_for('read', list_of_event_ids=message))
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
 
 
 @app.route('/by_daterange', methods=['POST', 'GET'])
 def by_daterange():
     if request.method == 'POST':
         a = manager_instance.events_in_date_range(request.form['fromdate'], request.form['todate'])
-        message = ','.join(a)
-        return redirect(url_for('read', list_of_event_ids=message))
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
 
 
 @app.route('/up_and_past', methods=['POST', 'GET'])
