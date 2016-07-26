@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-    <style>
-
-    .container{
+ .container{
     background: black;
     }
 
@@ -69,15 +61,3 @@ clear: left;
   tr:hover{
   background-color:#66ffcc
   }
-
-
-
-
-</style>
-
-
-</head>
-<body>
-
-</body>
-</html>
