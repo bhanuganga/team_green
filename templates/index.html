@@ -42,7 +42,7 @@
     <div class="section">
         Name :<input type="text" name="name" required pattern="[\w]+" > <br><br>
         Date :<input type="date" name="date" required ><br><br>
-        City :<select name="city" style="width: 210px">
+        City :<select name="city" style="width: 210px" >
           <option value="Hyderabad">Hyderabad</option>
           <option value="Chennai">Chennai</option>
           <option value="Banglore">Bangalore</option>
@@ -55,12 +55,17 @@
 
 <div id="search" class="tab-pane fade">
     <form action="/search", method="POST">
-    <div  class="banner">Enter Event ID</div><hr>
+    <div  class="banner">Events List</div><hr>
     <div class="section">
-        ID:<input type="text" name="event_id" required  > <br><br>
+        <select name="event_name">
+            <option selected disabled>Select Your Event</option>
+        {%for key in data%}
+        <option>{{data[key]['name']}}</option>
+            {%endfor%}
+        </select><br><br>
     <input type="submit" value="Search" style="background-color: lightseagreen;border-color: lightseagreen" /><br><br>
     </div>
-</form>
+</form><!--TODO  view event names in a dropdown list (Search)-->
 </div>
 
 
@@ -68,12 +73,16 @@
      <form action='/fetch' method=POST >
 		<div  class="banner">Update here </div><hr>
         <div class="section">
-           EventId: <input type = "text" name = "event id" required  /><br><br>
+           <select name="event_name">
+        {%for key, val in data.iteritems()%}
+        <option>{{val['name']}}</option>
+            {%endfor%}
+        </select><br><br>
 
           </div>
          <input type="reset" value="Reset">   <input type="submit" value="Update"/><br><br>
      </form>
-
+<!--TODO  view event names in a dropdown list(Update)-->
 
     </div>
 
@@ -83,12 +92,17 @@
       <hr>
       <div class="section">
       <br>
-         Event Id  <input type = "text" name = "event id" required /><br><br>
+         <select name="event_name">
+        {%for key, val in data.iteritems()%}
+        <option>{{val['name']}}</option>
+            {%endfor%}
+        </select><br><br>
          <input type="submit" value="Delete" style="color:white;border-color:red;background-color: red"/><br>
          <br>
       </div>
-	</form>
+	</form><!--TODO  view event names in a dropdown list (Delete)-->
   </div>
+
 
 
     <div id="filters" class="tab-pane fade" Style="margin-right: 10px">
@@ -99,9 +113,15 @@
             <li><a data-toggle="tab" href="#list_by_date">list_by_date</a></li>
             <li><a data-toggle="tab" href="#list_by_city">list_by_city</a></li>
             <li><a data-toggle="tab" href="#list_by_date_and_city">list_by_date_and_city</a></li>
+
             <li ><a data-toggle="tab" href="#upcoming_and_past">upcoming_and_past</a></li>
+
               <li><a data-toggle="tab" href="#date_range">date_range</a></li>
           </ul>
+
+
+
+
             <div class="tab-content" >
             <div id="date_range" class="tab-pane fade">
                 <form action="/by_daterange" method="POST">

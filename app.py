@@ -1,3 +1,6 @@
+from collections import OrderedDict
+from operator import itemgetter
+
 from flask import Flask, render_template, redirect, url_for, request
 from manager import *
 from event import *
@@ -10,6 +13,7 @@ def read():
     a = request.args['list_of_event_ids']
     list_of_event_ids = a.split(',')
     storage = {}
+
     if a != '':
         for id in list_of_event_ids:
             x = manager_instance.read_event_by_id(id)
@@ -17,7 +21,14 @@ def read():
                 return 'id {} does not exist'.format(id)
             else:
                 storage.update({id: x.__dict__})
-    return render_template('search_result.html', storage=storage)
+
+    d = sorted(storage.items(), key=itemgetter(1), reverse=True)
+    for i in range(len(d)-1, 0, -1):
+        for j in range(0,i,1):
+            if d[i][1]['date'] < d[j][1]['date']:
+                d[i], d[j] = d[j], d[i]
+
+    return render_template('search_result.html', d=d, length = len(d))
 
 
 @app.route('/reader')
@@ -32,12 +43,24 @@ def reader():
             x = manager_instance.read_event_by_id(id)
             storage.update({id: x.__dict__})
 
+    d1 = sorted(storage.items(), key=itemgetter(1), reverse=True)
+    for i in range(len(d1) - 1, 0, -1):
+        for j in range(0, i, 1):
+            if d1[i][1]['date'] < d1[j][1]['date']:
+                d1[i], d1[j] = d1[j], d1[i]
+
     storage1 = {}
     if b[1]!='':
         list_of_event_ids = b[1].split(',')
         for id in list_of_event_ids:
             x = manager_instance.read_event_by_id(id)
             storage1.update({id: x.__dict__})
+
+    d2 = sorted(storage1.items(), key=itemgetter(1), reverse=True)
+    for i in range(len(d2) - 1, 0, -1):
+        for j in range(0, i, 1):
+            if d2[i][1]['date'] < d2[j][1]['date']:
+                d2[i], d2[j] = d2[j], d2[i]
 
     storage2 = {}
     if b[2] != '':
@@ -46,12 +69,20 @@ def reader():
             x = manager_instance.read_event_by_id(id)
             storage2.update({id: x.__dict__})
 
-    return render_template('result.html', storage=storage,storage1=storage1,storage2=storage2)
+    d3 = sorted(storage2.items(), key=itemgetter(1), reverse=True)
+    for i in range(len(d3) - 1, 0, -1):
+        for j in range(0, i, 1):
+            if d3[i][1]['date'] < d3[j][1]['date']:
+                d3[i], d3[j] = d3[j], d3[i]
 
+    return render_template('result.html', d1=d1,d2=d2,d3=d3,l1=len(d1),l2=len(d2),l3=len(d3))
+
+
+data_from_json = JsonHandler.load_file(JsonHandler())
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', data=data_from_json)
 
 
 @app.route('/add', methods=["POST"])
@@ -67,8 +98,11 @@ def add():
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
-        id=request.form['event_id']
-        return redirect(url_for('read', list_of_event_ids=id))
+        name =request.form['event_name']
+        for key,value in data_from_json.iteritems():
+            if value['name'] == name:
+                eid = key
+        return redirect(url_for('read', list_of_event_ids=eid))
 
 
 @app.route('/fetch', methods=["POST"])
@@ -97,12 +131,16 @@ def update():
 
 @app.route('/delete', methods=["POST"])
 def delete():
-    id = request.form["event id"]
-    message = manager_instance.delete_event_by_id(id)
+    name = request.form["event_name"]
+    for key, value in data_from_json.iteritems():
+        if value['name'] == name:
+            eid = key
+    message = manager_instance.delete_event_by_id(eid)
     if message == 1:
         return "Successfully deleted"
     else:
         return "id doesn't exist"
+
 
 @app.route('/by_date', methods=['POST', 'GET'])
 def by_date():

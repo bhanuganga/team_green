@@ -27,6 +27,7 @@ class Manager(object):
         self.json_instance.dump_file({str(id): event_instance.__dict__})
         return id
 
+
     def read_event_by_id(self, event_id):
         storage = self.json_instance.load_file()
         if event_id in storage:
@@ -48,9 +49,12 @@ class Manager(object):
     def events_in_date_range(self, date1, date2):
         storage = self.json_instance.load_file()
         final_list=[]
+        if date2 < date1:
+            date1,date2 = date2,date1
         for event_id in storage:
             if date1 <= storage[event_id]['date'] <= date2:
                 final_list.append(event_id)
+
         return final_list
 
     def list_event_by_date(self, date):
@@ -88,9 +92,11 @@ class Manager(object):
             if value['date'] == str(date.today()):
                 today_list.append(key)
             elif value['date'] > str(date.today()):
+
                 upcoming_list.append(key)
             else:
                 past_list.append(key)
+
         final_list.append(today_list)
         final_list.append(upcoming_list)
         final_list.append(past_list)

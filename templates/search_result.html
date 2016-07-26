@@ -7,23 +7,23 @@
 </head>
 <body>
 <table align="center">
-    <caption>Event(s)</caption>
+    <caption><strong>Event(s)</strong></caption><br>
     <tr>
-    <th>name</th>
-    <th>date</th>
-    <th>city</th>
-    <th>info</th>
+    <th>NAME</th>
+    <th>DATE</th>
+    <th>CITY</th>
+    <th>INFORMATION</th>
     </tr>
         <tr>
 
   </tr>
 
-        {% for key,value in storage.iteritems() %}
+        {% for i in range(0,length,1) %}
     <tr>
-        <td>{{value['name']}}</td>
-        <td>{{value['date']}}</td>
-        <td>{{value['city']}}</td>
-        <td>{{value['info']}}</td>
+        <td>{{d[i][1]['name']}}</td>
+        <td>{{d[i][1]['date']}}</td>
+        <td>{{d[i][1]['city']}}</td>
+        <td>{{d[i][1]['info']}}</td>
       </tr>
         {% endfor %}
     <tr>

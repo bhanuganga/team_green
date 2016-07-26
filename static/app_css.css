@@ -1,4 +1,4 @@
- .container{
+   .container{
     background: black;
     }
 
@@ -37,7 +37,7 @@
 
 	 font-size:18pt ;
 	 vertical-align: middle;
-	  margin-right: 50px;
+	  margin-right: 100px;
 	  border-radius:5px;
 	  text-align: center;
 }
@@ -56,8 +56,29 @@ clear: left;
   table,td,th{
     border-collapse: collapse;
    border: 1px solid black;
+   text-align:center;
+   margin-top:10%;
+   }
 
-  }
-  tr:hover{
-  background-color:#66ffcc
-  }
+table{
+width: 50%;
+}
+
+td,th{
+height: 30px;
+vertical-align: middle;
+}
+
+
+tr:nth-child(odd){
+background-color: 	#fbefcc;
+}
+
+th{
+background-color:#d9ad7c;
+}
+
+
+  tr:nth-child(even) {background-color: #fff2df}
+
+

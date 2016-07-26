@@ -8,44 +8,43 @@
 <body>
 <table align="center">
     <tr>
-    <th>name</th>
-    <th>date</th>
-    <th>city</th>
-    <th>info</th>
+    <th>NAME</th>
+    <th>DATE</th>
+    <th>CITY</th>
+    <th>INFORMATION</th>
     </tr>
         <tr>
-    <td colspan="4" align="center">Today's events</td>
+    <td colspan="4" align="center"><strong>Today's events</strong></td>
   </tr>
 
-        {% for key,value in storage.iteritems() %}
+        {% for i in range(0,l1) %}
     <tr>
-        <td>{{value['name']}}</td>
-        <td>{{value['date']}}</td>
-        <td>{{value['city']}}</td>
-        <td>{{value['info']}}</td>
+        <td>{{d1[i][1]['name']}}</td>
+        <td>{{d1[i][1]['date']}}</td>
+        <td>{{d1[i][1]['city']}}</td>
+        <td>{{d1[i][1]['info']}}</td>
       </tr>
         {% endfor %}
     <tr>
-    <td colspan="4" align="center">Upcoming events</td>
+    <td colspan="4" align="center"><strong>Upcoming events</strong></td>
   </tr>
-    {% for key,value in storage1.iteritems() %}
-
+        {% for j in range(0,l2) %}
     <tr>
-        <td>{{value['name']}}</td>
-        <td>{{value['date']}}</td>
-        <td>{{value['city']}}</td>
-        <td>{{value['info']}}</td>
+        <td>{{d2[j][1]['name']}}</td>
+        <td>{{d2[j][1]['date']}}</td>
+        <td>{{d2[j][1]['city']}}</td>
+        <td>{{d2[j][1]['info']}}</td>
       </tr>
         {% endfor %}
     <tr>
-    <td colspan="4" align="center">Past events</td>
+    <td colspan="4" align="center"><strong>Past events</strong></td>
   </tr>
-    {% for key,value in storage2.iteritems() %}
+        {% for k in range(0,l3) %}
     <tr>
-        <td>{{value['name']}}</td>
-        <td>{{value['date']}}</td>
-        <td>{{value['city']}}</td>
-        <td>{{value['info']}}</td>
+        <td>{{d3[k][1]['name']}}</td>
+        <td>{{d3[k][1]['date']}}</td>
+        <td>{{d3[k][1]['city']}}</td>
+        <td>{{d3[k][1]['info']}}</td>
       </tr>
         {% endfor %}
 
