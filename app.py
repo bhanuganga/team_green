@@ -1,5 +1,7 @@
+
 from collections import OrderedDict
 from operator import itemgetter
+from pickle import GET
 
 from flask import Flask, render_template, redirect, url_for, request
 from manager import *
@@ -7,6 +9,130 @@ from event import *
 
 app = Flask(__name__)
 manager_instance = Manager()
+
+
+def get_data():
+    response = JsonHandler().load_file()
+    return response
+
+@app.route('/')
+def index():
+    return render_template('index.html', data=get_data())
+
+
+@app.route('/add', methods=["POST"])
+def add():
+    data = get_data()
+    name = request.form['name']
+    date = request.form['date']
+    city = request.form['city'].capitalize()
+    if city=='Other':
+        city=request.form['city1'].capitalize()
+    info = request.form['info']
+    if city not in data["cities"]:
+        data["cities"].append(city)
+    manager_instance.update_city(data["cities"])
+    event_instance = Event(name, date, city, info)
+    message = manager_instance.add_event(event_instance)
+    return redirect(url_for("index"))
+
+@app.route('/search', methods=['POST', 'GET'])
+def search():
+    if request.method == 'POST':
+        eid = request.form['event_name']
+        if eid != "default":
+            data_from_json = JsonHandler.load_file(JsonHandler())
+            event_instance = manager_instance.read_event_by_id(eid)
+            if eid in data_from_json:
+                return render_template('search_result.html', instance=event_instance, id=eid, data=data_from_json)
+        else:
+            return "please select a name from list!"
+
+@app.route("/update", methods=["POST"])
+def update():
+    data=get_data()
+    upd_name = request.form["upd_name"]
+    upd_date = request.form["upd_date"]
+    upd_city = request.form["upd_city"].capitalize()
+    if upd_city == 'Other':
+        upd_city = request.form['cities'].capitalize()
+    upd_info = request.form["upd_info"]
+    eid = request.form["id"]
+    if upd_city not in data["cities"]:
+        data["cities"].append(upd_city)
+    manager_instance.update_city(data["cities"])
+    temp_dict = {"name":upd_name,"date":upd_date, "city":upd_city, "info":upd_info}
+    message = manager_instance.update_event_by_id(eid, temp_dict)
+    if message == 1:
+        return redirect(url_for("index"))
+    else:
+        return message
+
+
+@app.route('/delete', methods=["POST"])
+def delete():
+    eid = request.form["id"]
+    data_from_json = JsonHandler.load_file(JsonHandler())
+    if eid in data_from_json:
+        messsage = manager_instance.delete_event_by_id(eid)
+        if messsage == 1:
+            return redirect(url_for("index"))
+        else:
+            return "id doesn't exist"
+
+@app.route('/by_date', methods=['POST', 'GET'])
+def by_date():
+    if request.method == 'POST':
+        a = manager_instance.list_event_by_date(request.form['date'])
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
+
+
+@app.route('/by_city', methods=['POST', 'GET'])
+def by_city():
+    if request.method == 'POST':
+        a = manager_instance.list_event_by_city(request.form['city'])
+        if a==[]:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
+
+
+@app.route('/by_date_and_city', methods=['POST', 'GET'])
+def by_date_and_city():
+    if request.method == 'POST':
+        a = manager_instance.list_event_by_date_and_city(request.form['date'], request.form['city'])
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
+
+
+@app.route('/by_daterange', methods=['POST', 'GET'])
+def by_daterange():
+    if request.method == 'POST':
+        a = manager_instance.events_in_date_range(request.form['fromdate'], request.form['todate'])
+        if a == []:
+            return 'no event found'
+        else:
+            message = ','.join(a)
+            return redirect(url_for('read', list_of_event_ids=message))
+
+
+@app.route('/up_and_past')
+def up_and_past():
+    a = manager_instance.today_upcoming_and_completed_events()
+    message1 = ','.join(a[0])
+    message2 = ','.join(a[1])
+    message3 = ','.join(a[2])
+    b = [message1, message2, message3]
+    message = '.'.join(b)
+    return redirect(url_for('reader', list_of_event_ids=message))
 
 @app.route('/read')
 def read():
@@ -28,7 +154,7 @@ def read():
             if d[i][1]['date'] < d[j][1]['date']:
                 d[i], d[j] = d[j], d[i]
 
-    return render_template('search_result.html', d=d, length = len(d))
+    return render_template('read.html', d=d, length = len(d))
 
 
 @app.route('/reader')
@@ -78,125 +204,10 @@ def reader():
     return render_template('result.html', d1=d1,d2=d2,d3=d3,l1=len(d1),l2=len(d2),l3=len(d3))
 
 
-data_from_json = JsonHandler.load_file(JsonHandler())
-
-@app.route('/')
-def index():
-    return render_template('index.html', data=data_from_json)
-
-
-@app.route('/add', methods=["POST"])
-def add():
-    name = request.form['name']
-    date = request.form['date']
-    city = request.form['city']
-    info = request.form['info']
-    event_instance = Event(name, date, city, info)
-    message = manager_instance.add_event(event_instance)
-    return "Save this id : {}".format(message)
-
-@app.route('/search', methods=['POST', 'GET'])
-def search():
-    if request.method == 'POST':
-        name =request.form['event_name']
-        for key,value in data_from_json.iteritems():
-            if value['name'] == name:
-                eid = key
-        return redirect(url_for('read', list_of_event_ids=eid))
-
-
-@app.route('/fetch', methods=["POST"])
-def fetch():
-    e_id = request.form['event id']
-    event_instance = manager_instance.read_event_by_id(e_id)
-    if event_instance != e_id:
-        return render_template('update.html', event=event_instance, id=e_id)
-    else:
-        return "No such id found!"
-
-@app.route("/update", methods=["POST"])
-def update():
-    upd_name = request.form["upd_name"]
-    upd_date = request.form["upd_date"]
-    upd_city = request.form["upd_city"]
-    upd_info = request.form["upd_info"]
-    eid = request.form["id"]
-    temp_dict = {"name":upd_name,"date":upd_date, "city":upd_city, "info":upd_info}
-    message = manager_instance.update_event_by_id(eid, temp_dict)
-    if message == 1:
-        return "Successfully updated"
-    else:
-        return message
-
-
-@app.route('/delete', methods=["POST"])
-def delete():
-    name = request.form["event_name"]
-    for key, value in data_from_json.iteritems():
-        if value['name'] == name:
-            eid = key
-    message = manager_instance.delete_event_by_id(eid)
-    if message == 1:
-        return "Successfully deleted"
-    else:
-        return "id doesn't exist"
-
-
-@app.route('/by_date', methods=['POST', 'GET'])
-def by_date():
-    if request.method == 'POST':
-        a = manager_instance.list_event_by_date(request.form['date'])
-        if a == []:
-            return 'no event found'
-        else:
-            message = ','.join(a)
-            return redirect(url_for('read', list_of_event_ids=message))
-
-
-@app.route('/by_city', methods=['POST', 'GET'])
-def by_city():
-    if request.method == 'POST':
-        a = manager_instance.list_event_by_city(request.form['city'])
-        if a==[]:
-            return 'no event found'
-        else:
-            message = ','.join(a)
-            return redirect(url_for('read', list_of_event_ids=message))
-
-
-@app.route('/by_date_and_city', methods=['POST', 'GET'])
-def by_date_and_city():
-    if request.method == 'POST':
-        a = manager_instance.list_event_by_date_and_city(request.form['date'], request.form['city'])
-        if a == []:
-            return 'no event found'
-        else:
-            message = ','.join(a)
-            return redirect(url_for('read', list_of_event_ids=message))
-
-
-@app.route('/by_daterange', methods=['POST', 'GET'])
-def by_daterange():
-    if request.method == 'POST':
-        a = manager_instance.events_in_date_range(request.form['fromdate'], request.form['todate'])
-        if a == []:
-            return 'no event found'
-        else:
-            message = ','.join(a)
-            return redirect(url_for('read', list_of_event_ids=message))
-
-
-@app.route('/up_and_past', methods=['POST', 'GET'])
-def up_and_past():
-    if request.method == 'POST':
-        a = manager_instance.today_upcoming_and_completed_events()
-        message1 = ','.join(a[0])
-        message2 = ','.join(a[1])
-        message3 = ','.join(a[2])
-        b = [message1, message2, message3]
-        message = '.'.join(b)
-        return redirect(url_for('reader', list_of_event_ids=message))
-
-
+@app.route('/test')
+def test():
+    storage=get_data()
+    d = sorted(storage.items(), key=itemgetter(1), reverse=True)
+    return render_template("search_result.html",d=d,data=get_data())
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

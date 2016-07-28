@@ -52,8 +52,9 @@ class Manager(object):
         if date2 < date1:
             date1,date2 = date2,date1
         for event_id in storage:
-            if date1 <= storage[event_id]['date'] <= date2:
-                final_list.append(event_id)
+            if event_id != 'cities':
+                if date1 <= storage[event_id]['date'] <= date2:
+                    final_list.append(event_id)
 
         return final_list
 
@@ -61,24 +62,27 @@ class Manager(object):
         storage = self.json_instance.load_file()
         final_list=[]
         for key, value in storage.iteritems():
-            if value['date'] == date:
-                final_list.append(key)
+            if key != 'cities':
+                if value['date'] == date:
+                    final_list.append(key)
         return final_list
 
     def list_event_by_city(self, city):
         storage = self.json_instance.load_file()
         final_list=[]
         for key, value in storage.iteritems():
-            if value['city'] == city:
-                final_list.append(key)
+            if key!='cities':
+                if value['city'] == city:
+                    final_list.append(key)
         return final_list
 
     def list_event_by_date_and_city(self, date, city):
         storage = self.json_instance.load_file()
         final_list=[]
         for key, value in storage.iteritems():
-            if value['date'] == date and value['city'] == city:
-                final_list.append(key)
+            if key!='cities':
+                if value['date'] == date and value['city'] == city:
+                    final_list.append(key)
         return final_list
 
 
@@ -89,15 +93,20 @@ class Manager(object):
         past_list = []
         final_list = []
         for key, value in temp_data.items():
-            if value['date'] == str(date.today()):
-                today_list.append(key)
-            elif value['date'] > str(date.today()):
+            if key != 'cities':
+                if value['date'] == str(date.today()):
+                    today_list.append(key)
+                elif value['date'] > str(date.today()):
 
-                upcoming_list.append(key)
-            else:
-                past_list.append(key)
+                    upcoming_list.append(key)
+                else:
+                    past_list.append(key)
 
         final_list.append(today_list)
         final_list.append(upcoming_list)
         final_list.append(past_list)
         return final_list
+
+
+    def update_city(self,city_list):
+        return self.json_instance.dump_file({"cities":city_list})

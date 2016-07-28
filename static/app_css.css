@@ -1,6 +1,3 @@
-   .container{
-    background: black;
-    }
 
     h1{
     font-family:toms handwritten new; display:inline-block; vertical-align: middle;
@@ -37,7 +34,7 @@
 
 	 font-size:18pt ;
 	 vertical-align: middle;
-	  margin-right: 100px;
+
 	  border-radius:5px;
 	  text-align: center;
 }
@@ -57,11 +54,12 @@ clear: left;
     border-collapse: collapse;
    border: 1px solid black;
    text-align:center;
-   margin-top:10%;
+   margin-top:5%;
    }
 
 table{
 width: 50%;
+
 }
 
 td,th{
@@ -80,5 +78,9 @@ background-color:#d9ad7c;
 
 
   tr:nth-child(even) {background-color: #fff2df}
+option:hover{
+background-color:red;
+position:relative;
 
+}
 

@@ -12,7 +12,7 @@
 
 
 <link rel="stylesheet" href="/static/app_css.css">
-
+<script src="/static/script.js"></script>
 </head>
 <body>
   <div class="container"  >
@@ -21,9 +21,7 @@
   <ul class="nav nav-tabs" >
     <li><a data-toggle="tab" href="#home">Home</a></li>
     <li><a data-toggle="tab" href="#add">Add Event</a></li>
-    <li><a data-toggle="tab" href="#search">Search Event</a></li>
-    <li><a data-toggle="tab" href="#update">Update Event</a></li>
-    <li><a data-toggle="tab" href="#delete">Delete Event</a></li>
+    <li><a data-toggle="tab" href="#search_modify">Search and Modify Event</a></li>
     <li><a data-toggle="tab" href="#filters">Filters</a></li>
   </ul>
 
@@ -40,69 +38,40 @@
     <div class="banner">Event Details Here</div><hr>
 
     <div class="section">
-        Name :<input type="text" name="name" required pattern="[\w]+" > <br><br>
-        Date :<input type="date" name="date" required ><br><br>
-        City :<select name="city" style="width: 210px" >
-          <option value="Hyderabad">Hyderabad</option>
-          <option value="Chennai">Chennai</option>
-          <option value="Banglore">Bangalore</option>
+        Name : <input type="text" name="name" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" > <br><br>
+        Date : <input type="date" name="date" required ><br><br>
+        Info : <input type="text" required maxlength="50" name="info" /><br><br>
+        City :
+        <select name='city' onchange='Check(this.value);' style="width: 210px" >
+          {%for i in data["cities"]%}
+        <option value="{{i}}">{{i}}</option>
+            {%endfor%}
+        <option value="other">other</option>
         </select><br><br>
-        Info :<input type="text" required maxlength="50" name="info" /><br><br>
+        <input type="text" name="city1" id="city" style='display:none;' placeholder="Enter the city"/>
+
     </div>
         <input type="submit" value="Submit"/><br><br>
 </form>
 </div>
 
-<div id="search" class="tab-pane fade">
+<div id="search_modify" class="tab-pane fade">
     <form action="/search", method="POST">
     <div  class="banner">Events List</div><hr>
     <div class="section">
         <select name="event_name">
-            <option selected disabled>Select Your Event</option>
+            <option selected value="default">Select Your Event</option>
         {%for key in data%}
-        <option>{{data[key]['name']}}</option>
+               {% if key != "cities" %}
+
+        <option value="{{key}}">{{data[key]['name']}}</option>
+            {% endif %}
             {%endfor%}
         </select><br><br>
     <input type="submit" value="Search" style="background-color: lightseagreen;border-color: lightseagreen" /><br><br>
     </div>
-</form><!--TODO  view event names in a dropdown list (Search)-->
+</form><!--TODO  merge into single tab (Search)-->
 </div>
-
-
-  <div id="update" class="tab-pane fade">
-     <form action='/fetch' method=POST >
-		<div  class="banner">Update here </div><hr>
-        <div class="section">
-           <select name="event_name">
-        {%for key, val in data.iteritems()%}
-        <option>{{val['name']}}</option>
-            {%endfor%}
-        </select><br><br>
-
-          </div>
-         <input type="reset" value="Reset">   <input type="submit" value="Update"/><br><br>
-     </form>
-<!--TODO  view event names in a dropdown list(Update)-->
-
-    </div>
-
-<div id="delete" class="tab-pane fade" >
-    <form action="/delete", method="POST">
-	<div  class="banner"> Delete Event </div>
-      <hr>
-      <div class="section">
-      <br>
-         <select name="event_name">
-        {%for key, val in data.iteritems()%}
-        <option>{{val['name']}}</option>
-            {%endfor%}
-        </select><br><br>
-         <input type="submit" value="Delete" style="color:white;border-color:red;background-color: red"/><br>
-         <br>
-      </div>
-	</form><!--TODO  view event names in a dropdown list (Delete)-->
-  </div>
-
 
 
     <div id="filters" class="tab-pane fade" Style="margin-right: 10px">
@@ -114,7 +83,7 @@
             <li><a data-toggle="tab" href="#list_by_city">list_by_city</a></li>
             <li><a data-toggle="tab" href="#list_by_date_and_city">list_by_date_and_city</a></li>
 
-            <li ><a data-toggle="tab" href="#upcoming_and_past">upcoming_and_past</a></li>
+            <li ><a  href="http://127.0.0.1:5000/up_and_past">upcoming_and_past</a></li>
 
               <li><a data-toggle="tab" href="#date_range">date_range</a></li>
           </ul>
@@ -154,9 +123,10 @@
                  <hr>
                 <div class="section">
                 city     <select name="city">
-                    <option value="Hyderabad">Hyderabad</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Banglore">Banglore</option>
+
+                   {%for i in data["cities"]%}
+        <option value="{{i}}">{{i}}</option>
+            {%endfor%}
                     </select><br><br>
                 <button type="submit" value="submit">Submit</button><br><br>
 
@@ -171,9 +141,9 @@
                    date  <input type = "date" name = "date" /><br><br>
 
                 city     <select name="city">
-                    <option value="Hyderabad">Hyderabad</option>
-                    <option value="Chennai">Chennai</option>
-                    <option value="Banglore">Banglore</option>
+                    {%for i in data["cities"]%}
+        <option value="{{i}}">{{i}}</option>
+            {%endfor%}
                     </select>
                     <br><br>
                 <button type="submit" value="submit">Submit</button><br><br>
@@ -181,17 +151,7 @@
               </div>
              </form>
             </div>
-            <div id="upcoming_and_past" class="tab-pane fade" >
-                <form action="/up_and_past" method="POST">
-                <div  class="banner">click to view list </div>
-                 <hr>
-                <div class="section">
 
-                <button type="submit" value="submit">click to view</button><br><br>
-
-              </div>
-             </form>
-            </div>
         </div>
     </div>
 

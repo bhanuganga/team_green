@@ -20,6 +20,8 @@ class JsonHandler(object):
         storage = self.load_file()
         with open(self.file_name, "w+") as f:
             if storage is None:
+                city_list = []
+                x.update({"cities": city_list})
                 json.dump(x, f, indent=2)
             else:
                 storage.update(x)
