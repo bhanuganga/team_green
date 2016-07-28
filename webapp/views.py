@@ -1,13 +1,12 @@
-
+from webapp import app
 from collections import OrderedDict
 from operator import itemgetter
 from pickle import GET
 
-from flask import Flask, render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request
 from manager import *
 from event import *
 
-app = Flask(__name__)
 manager_instance = Manager()
 
 
@@ -209,5 +208,4 @@ def test():
     storage=get_data()
     d = sorted(storage.items(), key=itemgetter(1), reverse=True)
     return render_template("search_result.html",d=d,data=get_data())
-if __name__ == '__main__':
-    app.run(debug=True)
+

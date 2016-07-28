@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%block title%}Events{% endblock%}</title>
+    <link rel="stylesheet" href="/static/foundation.css">
+    <link rel="stylesheet" href="/static/foundation.min.css">
+    <link rel="stylesheet" href="/static/normalize.css">
+</head>
+<body>
+<div> Header
+    <ul>
+
+    <li> <a href="#">Add</a></li>
+    <li> <a href="$">search</a></li>
+
+    </ul>
+</div>
+<!--  body here -->
+    <div id="content">{% block body %}{% endblock %}</div>
+
+<div> Footer </div>
+<script type="text/javascript" src="/static/foundation.min.js"></script>
+<script type="text/javascript" src="/static/modernizr.js"></script>
+</body>
+</html>
