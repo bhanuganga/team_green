@@ -1,4 +1,4 @@
-
+/*
     h1{
     font-family:toms handwritten new; display:inline-block; vertical-align: middle;
     }
@@ -12,7 +12,7 @@
      text-align: center
     }
 
-  a{
+  a
     font-family:"Terminal Dosis"; font-size :13pt;background-color: black}
   form{
 		border:1px solid black;
@@ -39,7 +39,7 @@
 	  text-align: center;
 }
   input{
-    border-color: light grey;
+    border-color: lightgrey;
     width: 210px;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -82,5 +82,15 @@ option:hover{
 background-color:red;
 position:relative;
 
-}
-
+}*/
+footer{
+ line-height: 10px;
+ position: absolute;
+ right: 0;
+ bottom: 0;
+ left: 0;
+ padding: 1rem;
+ background-color: #555555;
+ text-align: center;
+ }
+.customform{margin-top: 50px}

@@ -14,9 +14,15 @@ def get_data():
     response = JsonHandler().load_file()
     return response
 
+
 @app.route('/')
 def index():
-    return render_template('index.html', data=get_data())
+    return render_template('layout.html')
+
+
+@app.route("/add_event_h")    #Render add_event html
+def add_event_html():
+    return render_template("add_event.html", data=get_data())
 
 
 @app.route('/add', methods=["POST"])
@@ -32,20 +38,27 @@ def add():
         data["cities"].append(city)
     manager_instance.update_city(data["cities"])
     event_instance = Event(name, date, city, info)
-    message = manager_instance.add_event(event_instance)
-    return redirect(url_for("index"))
+    manager_instance.add_event(event_instance)
+    message = "Event added!"
+    return render_template("add_event.html", data=get_data(), message=message)
+
+
+@app.route("/search_event_h")          #Render search_html
+def search_html():
+    return render_template("search_modify.html", data=get_data())
+
 
 @app.route('/search', methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
         eid = request.form['event_name']
         if eid != "default":
-            data_from_json = JsonHandler.load_file(JsonHandler())
             event_instance = manager_instance.read_event_by_id(eid)
-            if eid in data_from_json:
-                return render_template('search_result.html', instance=event_instance, id=eid, data=data_from_json)
+            if eid in get_data():
+                return render_template('search_result.html', instance=event_instance, id=eid, data=get_data())
         else:
             return "please select a name from list!"
+
 
 @app.route("/update", methods=["POST"])
 def update():
@@ -63,7 +76,7 @@ def update():
     temp_dict = {"name":upd_name,"date":upd_date, "city":upd_city, "info":upd_info}
     message = manager_instance.update_event_by_id(eid, temp_dict)
     if message == 1:
-        return redirect(url_for("index"))
+        return redirect(url_for("search_html"))
     else:
         return message
 
@@ -75,7 +88,7 @@ def delete():
     if eid in data_from_json:
         messsage = manager_instance.delete_event_by_id(eid)
         if messsage == 1:
-            return redirect(url_for("index"))
+            return redirect(url_for("search_html"))
         else:
             return "id doesn't exist"
 
@@ -132,6 +145,7 @@ def up_and_past():
     b = [message1, message2, message3]
     message = '.'.join(b)
     return redirect(url_for('reader', list_of_event_ids=message))
+
 
 @app.route('/read')
 def read():
