@@ -3,10 +3,11 @@
 {% block body %}
 <div class="row large-centered ">
 <div class="columns">
-<form id="add_form" action="/add" method="POST" target="_self" class="customform">
+<form id="add_form" action="/add" method="POST" target="_self" class="customform " data-abide>
         <div class="row ">
-            <div class="small-6 columns ">
+            <div class="small-6 columns name-field">
             Name : <input type="text" name="name" placeholder="Event Name" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" >
+            <small class="error">Invalid name.</small>
             </div>
             <div class="small-6 columns ">
                 Date : <input type="date" name="date" required >
@@ -33,7 +34,7 @@
 
         <div class="row">
             <div class="small-2 small-centered large-centered columns">
-                <button class="small button" type="submit">Submit</button>
+                <button class="small button" type="button ">Add</button>
             </div>
         </div>
         <div class="row">
@@ -46,4 +47,5 @@
 </div>
 </div>
 <script src="/static/script.js"></script>
+
 {% endblock%}

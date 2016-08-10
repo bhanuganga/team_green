@@ -27,7 +27,6 @@ class Manager(object):
         self.json_instance.dump_file({str(id): event_instance.__dict__})
         return id
 
-
     def read_event_by_id(self, event_id):
         storage = self.json_instance.load_file()
         if event_id in storage:
@@ -48,9 +47,9 @@ class Manager(object):
 
     def events_in_date_range(self, date1, date2):
         storage = self.json_instance.load_file()
-        final_list=[]
+        final_list = []
         if date2 < date1:
-            date1,date2 = date2,date1
+            date1, date2 = date2, date1
         for event_id in storage:
             if event_id != 'cities':
                 if date1 <= storage[event_id]['date'] <= date2:
@@ -60,7 +59,7 @@ class Manager(object):
 
     def list_event_by_date(self, date):
         storage = self.json_instance.load_file()
-        final_list=[]
+        final_list = []
         for key, value in storage.iteritems():
             if key != 'cities':
                 if value['date'] == date:
@@ -69,22 +68,21 @@ class Manager(object):
 
     def list_event_by_city(self, city):
         storage = self.json_instance.load_file()
-        final_list=[]
+        final_list = []
         for key, value in storage.iteritems():
-            if key!='cities':
+            if key != 'cities':
                 if value['city'] == city:
                     final_list.append(key)
         return final_list
 
     def list_event_by_date_and_city(self, date, city):
         storage = self.json_instance.load_file()
-        final_list=[]
+        final_list = []
         for key, value in storage.iteritems():
-            if key!='cities':
+            if key != 'cities':
                 if value['date'] == date and value['city'] == city:
                     final_list.append(key)
         return final_list
-
 
     def today_upcoming_and_completed_events(self):
         temp_data = self.json_instance.load_file()
@@ -107,6 +105,5 @@ class Manager(object):
         final_list.append(past_list)
         return final_list
 
-
-    def update_city(self,city_list):
-        return self.json_instance.dump_file({"cities":city_list})
+    def update_city(self, city_list):
+        return self.json_instance.dump_file({"cities": city_list})

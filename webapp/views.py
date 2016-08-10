@@ -31,8 +31,8 @@ def add():
     name = request.form['name']
     date = request.form['date']
     city = request.form['city'].capitalize()
-    if city=='Other':
-        city=request.form['city1'].capitalize()
+    if city == 'Other':
+        city = request.form['city1'].capitalize()
     info = request.form['info']
     if city not in data["cities"]:
         data["cities"].append(city)
@@ -46,6 +46,31 @@ def add():
 @app.route("/search_event_h")          #Render search_html
 def search_html():
     return render_template("search_modify.html", data=get_data())
+
+
+@app.route("/filter_html")
+def filter_html():
+    return render_template("filters.html", data=get_data())
+
+
+@app.route("/by_date_html")
+def by_date_html():
+    return render_template("list_by_date.html", data=get_data())
+
+
+@app.route("/by_city_html")
+def by_city_html():
+    return render_template("list_by_city.html", data=get_data())
+
+
+@app.route("/by_city_date_html")
+def by_city_date_html():
+    return render_template("list_by_city_date.html", data=get_data())
+
+
+@app.route("/by_daterange_html")
+def by_daterange_html():
+    return render_template("list_by_daterange.html", data=get_data())
 
 
 @app.route('/search', methods=['POST', 'GET'])
@@ -214,7 +239,7 @@ def reader():
             if d3[i][1]['date'] < d3[j][1]['date']:
                 d3[i], d3[j] = d3[j], d3[i]
 
-    return render_template('result.html', d1=d1,d2=d2,d3=d3,l1=len(d1),l2=len(d2),l3=len(d3))
+    return render_template('result.html', d1=d1, d2=d2, d3=d3, l1=len(d1), l2=len(d2), l3=len(d3))
 
 
 @app.route('/test')

@@ -35,12 +35,6 @@
     "info": "random", 
     "name": "qwerty"
   }, 
-  "a5b8c812-f13b-4f08-acc8-b0d9c9fb3c41": {
-    "date": "2016-07-28", 
-    "city": "Pune", 
-    "info": "eveningtest", 
-    "name": "abcd"
-  }, 
   "fa10b891-8d37-45f3-b729-fd8dd2dff82b": {
     "date": "2016-07-01", 
     "city": "Maharashtra", 
@@ -62,5 +56,11 @@
     "Maharashtra", 
     "Maharastra", 
     "Vijayawada"
-  ]
+  ], 
+  "f6a4cd32-f7b2-4452-9a1d-f20fe5f984b4": {
+    "date": "2016-08-28", 
+    "city": "Bang", 
+    "info": "jquery", 
+    "name": "Bhanu Ganga"
+  }
 }

@@ -45,7 +45,7 @@
     border-radius: 5px;
   }
 
-
+*/
 br{
 clear: left;
 }
@@ -82,7 +82,7 @@ option:hover{
 background-color:red;
 position:relative;
 
-}*/
+}
 footer{
  line-height: 10px;
  position: absolute;
@@ -94,3 +94,7 @@ footer{
  text-align: center;
  }
 .customform{margin-top: 50px}
+
+.breadcrumbs li a{
+    font-size: medium;
+}
