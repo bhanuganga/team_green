@@ -40,7 +40,7 @@ def add():
     event_instance = Event(name, date, city, info)
     manager_instance.add_event(event_instance)
     message = "Event added!"
-    return render_template("add_event.html", data=get_data(), message=message)
+    return message
 
 
 @app.route("/search_event_h")          #Render search_html
@@ -73,7 +73,7 @@ def by_daterange_html():
     return render_template("list_by_daterange.html", data=get_data())
 
 
-@app.route('/search', methods=['POST', 'GET'])
+@app.route('/search', methods=['POST'])
 def search():
     if request.method == 'POST':
         eid = request.form['event_name']

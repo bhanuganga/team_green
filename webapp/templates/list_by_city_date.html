@@ -1,24 +1,42 @@
 {% extends "filters.html" %}
-{% block title %}List{% endblock%}
+
 {% block content %}
 
-                <form action="/by_date_and_city" method="POST">
+<form action="/by_date_and_city" method="POST">
+    <div class="row section">
+        <div class=" columns large-4 small-5  ">
+           date  <input type = "date" name = "date" />
+        </div>
+        <div class="columns large-4 small-5 ">
+            city     <select name="city">
+                        {%for i in data["cities"]%}
+                    <option value="{{i}}">{{i}}</option>
+                    {%endfor%}
+                        </select>
+        </div>
+         <div class="columns large-2 small-2 end " style="padding-top: 25px">
+            <input id="date_city" type="button" class="button postfix" value="submit"><br><br>
+        </div>
 
-                <div class="section">
-                   date  <input type = "date" name = "date" /><br><br>
-
-                city     <select name="city">
-                    {%for i in data["cities"]%}
-        <option value="{{i}}">{{i}}</option>
-            {%endfor%}
-                    </select>
-                    <br><br>
-                <button type="submit" value="submit">Submit</button><br><br>
-
-              </div>
-             </form>
+    </div>
+</form>
 
 
+<div class="row columns large-6 large-centered small-centered medium-centered" id=ermsg style="margin-bottom: 50px"></div>
+    <script>
+    $(document).ready(function(){
+           $('#date_city').click( function() {
+               $.post("/by_date_and_city", $('form').serializeArray(), function (data) {
+                   if (data !== 'no event found' ) {
+                       $('#ermsg').html(data);
+                   }
+                   else{
+                       alert(data);
+                   }
+               });
+           });
+    } );
+    </script>
 
 
 {% endblock%}

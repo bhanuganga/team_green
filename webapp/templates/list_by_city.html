@@ -1,12 +1,12 @@
 {% extends "filters.html" %}
-{% block title %}List{% endblock%}
+
 {% block content %}
 
 <form action="/by_city" method="POST">
     <div class="row">
-        <div class="large-10 columns">
-            <div class="row collapse">
-                <div class="small-10 columns">
+        <div class="large-10 columns large-centered">
+
+                <div class="small-8 large-7 columns">
                     <select name="city">
                 {%for i in data["cities"]%}
                     <option value="{{i}}">{{i}}</option>
@@ -15,17 +15,29 @@
 
 
                 </div>
-                <div class="small-2 columns">
-                        <button class = "button postfix" type="submit" value="submit">Submit</button><br><br>
+                <div class="small-2 large-2 columns end">
+                        <input id="city_button" class = "button postfix" type="button" value="submit"><br><br>
 
                 </div>
-            </div>
+
         </div>
     </div>
-
-
-
-
 </form>
+
+    <div class="row columns large-6 large-centered small-centered medium-centered" id=ermsg style="margin-bottom: 50px" ></div>
+    <script>
+    $(document).ready(function(){
+           $('#city_button').click( function() {
+               $.post("/by_city", $('form').serializeArray(), function (data) {
+                   if (data !== 'no event found' ) {
+                       $('#ermsg').html(data);
+                   }
+                   else{
+                       alert(data);
+                   }
+               });
+           });
+    } );
+    </script>
 
 {% endblock%}

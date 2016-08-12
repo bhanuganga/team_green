@@ -17,7 +17,7 @@ function setSelectedIndex(s, v) {
 }
 
  function Check(val){
- var element=document.getElementById('city');
+ var element=document.getElementById('city1');
  if(val=='other')
    element.style.display='block';
  else
