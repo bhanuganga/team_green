@@ -53,18 +53,21 @@ clear: left;
   table,td,th{
     border-collapse: collapse;
    border: 1px solid black;
-   text-align:center;
+
 
    }
 
 table{
 width: 50%;
+margin-bottom:50px;
+text-align:center;
 
 }
 
 td,th{
 height: 30px;
 vertical-align: middle;
+
 }
 
 

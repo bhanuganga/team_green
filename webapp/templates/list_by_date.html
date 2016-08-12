@@ -13,26 +13,13 @@
 
             </div>
             <div class="columns large-2 small-2 end" style="padding-top: 25px" >
-                <input id="date_button" type="button" class="small button postfix" value="submit">
+                <input onclick="bydate()"  type="button" class="small button postfix" value="submit">
             </div>
 
 
         </div>
 </form>
 
-<div class="row columns large-6 large-centered small-centered medium-centered" id=ermsg style="margin-bottom: 50px" ></div>
-    <script>
-    $(document).ready(function(){
-           $('#date_button').click( function() {
-               $.post("/by_date", $('form').serializeArray(), function (data) {
-                   if (data !== 'no event found' ) {
-                       $('#ermsg').html(data);
-                   }
-                   else{
-                       alert(data);
-                   }
-               });
-           });
-    } );
-    </script>
+<div id=message class="row columns large-centered" style="margin-botton:50px;"></div>
+<script src="/static/script.js"></script>
 {% endblock%}

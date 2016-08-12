@@ -18,24 +18,12 @@
     </div>
     <div class="row">
         <div class="small-2 small-centered large-centered columns">
-            <input class="small button" id=search_button type="button" value="Search"><br><br>
+            <input class="small button" onclick="search()" id=search_button type="button" value="Search"><br><br>
         </div>
     </div>
 </form>
-    <div class="row columns large-6 large-centered small-centered medium-centered" id=ermsg ></div>
-    <script>
-    $(document).ready(function(){
-           $('#search_button').click( function() {
-               $.post("/search", $('form').serializeArray(), function (data) {
-                   if (data !== "please select a name from list!" ) {
-                       $('#ermsg').html(data);
-                   }
-                   else{
-                       alert(data);
-                   }
-               });
-           });
-    } );
-    </script>
+   <div id=ermsg class="row columns large-centered"></div>
+
+<script src="/static/script.js"></script>
 {% endblock%}
 {% block result %}{% endblock %}

@@ -15,28 +15,16 @@
                         </select>
         </div>
          <div class="columns large-2 small-2 end " style="padding-top: 25px">
-            <input id="date_city" type="button" class="button postfix" value="submit"><br><br>
+            <input onclick="date_city()"  type="button" class="button postfix" value="submit"><br><br>
         </div>
 
     </div>
 </form>
 
 
-<div class="row columns large-6 large-centered small-centered medium-centered" id=ermsg style="margin-bottom: 50px"></div>
-    <script>
-    $(document).ready(function(){
-           $('#date_city').click( function() {
-               $.post("/by_date_and_city", $('form').serializeArray(), function (data) {
-                   if (data !== 'no event found' ) {
-                       $('#ermsg').html(data);
-                   }
-                   else{
-                       alert(data);
-                   }
-               });
-           });
-    } );
-    </script>
+
+<div id=message class="row columns large-centered" ></div>
+<script src="/static/script.js"></script>
 
 
 {% endblock%}

@@ -34,7 +34,7 @@
 
         <div class="row">
             <div class="small-2 small-centered large-centered columns">
-                <input class="medium button" id="add_button" type="button" value="Add">
+                <input class="medium button" id="add_button" type="button" onclick="add()" value="Add">
             </div>
         </div>
 
@@ -42,30 +42,6 @@
 </div>
 </div>
 <script src="/static/script.js"></script>
-<script>
-$(document).ready(function() {
-    $('#add_button').click(function () {
-        var name = $('#name').val();
-        var date = $('#date').val();
-        var info = $('#info').val();
-        var cities = $('#cities').val();
-        var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/
 
-        if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
-
-
-            $.post("/add", $("#add_form").serializeArray(), function (response_data) {
-                alert(response_data);
-                $('#add_form')[0].reset();
-            });
-
-        }
-        else{
-            alert("One or more invalid fields.");
-
-        }
-    });
-});
-</script>
 
 {% endblock%}
