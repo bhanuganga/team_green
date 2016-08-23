@@ -1,3 +1,3 @@
 # team_green
 
-Events App
+Working **Django** Events App

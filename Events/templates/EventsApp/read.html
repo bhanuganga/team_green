@@ -1,0 +1,26 @@
+
+<table align="center">
+    <caption><strong>Event(s)</strong></caption><br>
+    <tr>
+    <th>NAME</th>
+    <th>DATE</th>
+    <th>CITY</th>
+    <th>INFORMATION</th>
+    </tr>
+        <tr>
+
+  </tr>
+
+        {% for event in events %}
+    <tr>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
+      </tr>
+        {% endfor %}
+    <tr>
+
+
+
+</table>
