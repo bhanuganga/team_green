@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}foundation.min.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}normalize.css">
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css">
+    <link rel="icon" href="{{ STATIC_URL }}icon.png"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 
 </head>{% endblock %}
-<body>
+<body>{% csrf_token %}
 <div class="row">
     <div class="columns small-1 large-1 large-offset-4 small-offset-4">
         <br><img src='/static/icon.png' style="width: 50px; height: 50px;">

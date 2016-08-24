@@ -41,7 +41,7 @@ def add(request):
 # @app.route("/search_event_h")          #Render search_html
 
 def search_modify_html(request):
-    return render(request, "search_modify.html", {'data': Events.objects.order_by('-date')})
+    return render(request, "search_modify.html", {'data': Events.objects.order_by('date')})
 
 
 # @app.route('/search', methods=['POST'])
@@ -150,7 +150,7 @@ def by_date_range(request):
     if request.method == 'POST':
         date1 = request.POST.get('date1')
         date2 = request.POST.get('date2')
-        events_list = Events.objects.filter(date__gt=date1).filter(date__lt=date2).order_by("date")
+        events_list = Events.objects.filter(date__gte=date1).filter(date__lte=date2).order_by("date")
         if events_list:
             return render(request, 'read.html', {'events': events_list})
         else:

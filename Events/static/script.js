@@ -65,7 +65,7 @@ function Check(val){
 
       //search_script
 function search() {
-        var event_is = $('#event_name').val()
+        var event_is = $('#event_name').val();
         var csrftoken = getCookie('csrftoken');
             $.ajaxSetup({
                 beforeSend: function(xhr) {
@@ -79,7 +79,7 @@ function search() {
             function (data) {
                if(data=="please select a name from list!"){
                    $('#search_result').slideUp();
-                   alert(data);
+                  // alert(data);
 
                }
                else{

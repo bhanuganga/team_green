@@ -9,6 +9,9 @@ class Events(models.Model):
     info = models.CharField(max_length=50)
     city = models.ForeignKey('Cities')
 
+    def __unicode__(self):
+        return u'{0}; DATE: {1}; CITY: {2};  DESC:{3}'.format(self.name, self.date, self.city, self.info)
+
 
 class Cities(models.Model):
     place = models.CharField(primary_key=True, max_length=25)
