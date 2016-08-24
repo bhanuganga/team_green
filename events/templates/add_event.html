@@ -20,12 +20,13 @@
 
         <div class="row">
             <div class="small-6 columns">
-                City : <select id='cities' name='city' onchange='Check(this.value);'>
-                  {%for i in data%}
-                <option value="{{i.city}}">{{i.city}}</option>
-                    {%endfor%}
-                <option value="other">Other</option>
-                </select><br><br>
+                City :  <select id='cities' name='city' onchange='Check(this.value);'>
+                        <option>Select your city</option>
+                            {%for i in data%}
+                                <option value="{{i.city}}">{{i.city}}</option>
+                            {%endfor%}
+                        <option value="other">Other</option>
+                        </select><br><br>
             </div>
             <div class="small-6 columns">
                 <br><input type="text" name="city1" id="city1" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" style='display:none;' placeholder="Enter the city name manually"/>

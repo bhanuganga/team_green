@@ -4,11 +4,6 @@ from .models import AddEvent, Cities
 import datetime
 
 
-def abc(request):
-    a = AddEvent.objects.order_by('-name')
-    return render(request, 'layout.html', {'a': a})
-
-
 def index(request):
     return render(request, 'layout.html', {})
 
@@ -140,12 +135,12 @@ def by_date_range_html(request):
 
 def by_date_range(request):
     if request.method == 'POST':
-        date1 = request.POST.get('date1')
-        date2 = request.POST.get('date2')
+        date1 = request.POST.get('fromdate')
+        date2 = request.POST.get('todate')
         if date1 > date2:
             date1,date2 = date2,date1
 
-        a = AddEvent.objects.filter(date__gte=date1).filter(date__lte=date2).order_by('-date')
+        a = AddEvent.objects.filter(date__gte=date1, date__lte=date2).order_by('-date')
         if not a:
             return HttpResponse('no event found')
         else:

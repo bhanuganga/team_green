@@ -174,40 +174,47 @@ function add() {                                    // Onclick add button with a
 
     //daterange_script
    function by_date_range(){
-       var date1 = $('#date1').val();
-       var date2 = $('#date2').val();
+       var fromdate = $('#from').val();
+       var todate = $('#to').val();
+
+       if(fromdate != "" && todate != "") {
        
-       var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+           var csrftoken = getCookie('csrftoken');
+                $.ajaxSetup({
+                    beforeSend: function(xhr) {
+                        if (!this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
                     }
-                }
-            });
-       
-       $.ajax({
-            type: "POST",
-            url: "/by_date_range",
-            data: {'date1': date1, 'date2':date2},
-            success: function (data) {
-                
+                });
 
-                if (data == 'no event found') {
-                    location.reload();
-                    alert(data);
+           $.ajax({
+                type: "POST",
+                url: "/by_date_range",
+                data: {'fromdate': fromdate, 'todate':todate},
+                success: function (data) {
 
-                }
-                else {
-                    $("#message").html(data);
-                }
-            },
-                error:function () {
-                    alert("Something wrong");
-                }
 
-        });
+                    if (data == 'no event found') {
+                        location.reload();
+                        alert(data);
+
+                    }
+                    else {
+                        $("#message").html(data);
+                    }
+                },
+                    error:function () {
+                        alert("Something wrong");
+                    }
+
+           });
+       }
+       else{
+            alert("One or more invalid fields.");
+       }
     }
+
       //search_script
 function search() {                                  //search_script
         var event_is = $('#event_name').val();

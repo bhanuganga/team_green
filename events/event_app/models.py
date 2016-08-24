@@ -1,6 +1,10 @@
 from django.db import models
 
 
+class Cities(models.Model):
+    city = models.CharField(max_length=20)
+
+
 class AddEvent(models.Model):
     name = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
@@ -8,5 +12,3 @@ class AddEvent(models.Model):
     info = models.CharField(max_length=30)
 
 
-class Cities(models.Model):
-    city = models.CharField(max_length=20)
