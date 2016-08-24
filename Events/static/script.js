@@ -95,10 +95,10 @@ function updat() {
     var upd_name = $('#upd_name').val();
     var upd_date = $('#upd_date').val();
     var upd_info = $('#upd_info').val();
-    var city = $('#city').val();
+    var upd_city = $('#city').val();
     var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
-    if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(city)){
+    if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(upd_city)){
         var csrftoken = getCookie('csrftoken');
             $.ajaxSetup({
                 beforeSend: function(xhr) {
@@ -108,7 +108,7 @@ function updat() {
                 }
             });
         $.post("/update",
-            {'id': event_id, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':city, 'upd_info':upd_info},
+            {'id': event_id, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':upd_city, 'upd_info':upd_info},
                 function (response) {
                         location.reload();
                         alert(response);

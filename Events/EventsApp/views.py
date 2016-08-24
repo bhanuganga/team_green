@@ -32,7 +32,7 @@ def add(request):
     if city not in data:
         city_instance = Cities(place=city)
         city_instance.save()
-    event_instance = Events(name=name, date=date, city=city, info=info)
+    event_instance = Events(name=name, date=date, city_id=city, info=info)
     event_instance.save()
     message = "Event added!"
     return HttpResponse(message)
@@ -66,14 +66,14 @@ def update(request):
     upd_date = request.POST.get("upd_date")
     upd_city = request.POST.get("upd_city")
     if upd_city:
-        upd_city.capitalize()
+        upd_city = upd_city.capitalize()
     upd_info = request.POST.get("upd_info")
     eid = request.POST.get("id")
 
     if upd_city not in data:
         city_instance = Cities(place=upd_city)
         city_instance.save()
-    event_instance = Events(id=eid, name=upd_name, date=upd_date, city=upd_city, info=upd_info)
+    event_instance = Events(id=eid, name=upd_name, date=upd_date, city_id=upd_city, info=upd_info)
     event_instance.save()
     message = "Event Updated!"
     return HttpResponse(message)
