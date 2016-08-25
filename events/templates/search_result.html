@@ -24,7 +24,7 @@
 
         <div class="row">
             <div class="columns small-6 ">
-                CITY : <input type="text" name="upd_city" list="city1" id="city" value="{{instance.city}}" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$"
+                City : <input type="text" name="upd_city" list="city1" id="city" value="{{instance.city}}" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$"
                               onload="setSelectedIndex(document.getElementById('city1'),'{{instance.city}}')" required>
                 <datalist id="city1" >
                     {%for i in data%}
@@ -44,6 +44,11 @@
         </div>
 </div>
     </form>
+
+<div id="message"></div>
+<div id="onsuccess"></div>
+
+
 <script src="{{ STATIC_URL }}script.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}foundation.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}modernizr.js"></script>

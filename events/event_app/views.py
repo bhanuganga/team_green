@@ -41,11 +41,11 @@ def search_html(request):
 
 def search(request):
     if request.method == 'POST':
-        eid = request.POST.get('event_name')
-        if eid != "default":
-            event_instance = AddEvent.objects.get(id=eid)
+        id = request.POST.get('event_name')
+        if id != "default":
+            event_instance = AddEvent.objects.get(id=id)
             event_instance.date = str(event_instance.date)
-            return render(request, 'search_result.html', {'instance': event_instance, 'id': eid, 'data': Cities.objects.all()})
+            return render(request, 'search_result.html', {'instance': event_instance, 'id': id, 'data': Cities.objects.all()})
         else:
             return HttpResponse("please select a name from list!")
 
@@ -57,19 +57,19 @@ def update(request):
     if upd_city:
         upd_city = upd_city.capitalize()
     upd_info = request.POST.get("upd_info")
-    eid = request.POST.get("id")
+    id = request.POST.get("id")
     if upd_city not in [obj.city for obj in Cities.objects.all()]:
         Cities.objects.create(city=upd_city)
 
-    AddEvent.objects.filter(id=eid).update(name=upd_name, date=upd_date, city=upd_city, info=upd_info)
+    AddEvent.objects.filter(id=id).update(name=upd_name, date=upd_date, city=upd_city, info=upd_info)
 
     return HttpResponse("Updated")
 
 
 def delete(request):
-    eid = request.POST.get("id")
+    id = request.POST.get("id")
 
-    AddEvent.objects.filter(id=eid).delete()
+    AddEvent.objects.filter(id=id).delete()
 
     return HttpResponse("Deleted")
 
@@ -87,11 +87,12 @@ def by_date_html(request):
 
 def by_date(request):
     if request.method == 'POST':
-        a = AddEvent.objects.filter(date=request.POST.get('date'))
-        if not a:
+        date1 = request.POST.get('date')
+        filter_data = AddEvent.objects.filter(date=date1)
+        if not filter_data:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': a})
+            return render(request, 'read.html', {'data': filter_data})
 
 
 #####################
@@ -103,11 +104,12 @@ def by_city_html(request):
 
 def by_city(request):
     if request.method == 'POST':
-        a = AddEvent.objects.filter(city=request.POST.get('city'))
-        if not a:
+        city = request.POST.get('city')
+        filter_data = AddEvent.objects.filter(city=city)
+        if not filter_data:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': a})
+            return render(request, 'read.html', {'data': filter_data})
 
 
 #####################
@@ -119,11 +121,13 @@ def by_city_date_html(request):
 
 def by_date_and_city(request):
     if request.method == 'POST':
-        a = AddEvent.objects.filter(date=request.POST.get('date'), city=request.POST.get('city'))
-        if not a:
+        date1 = request.POST.get('date')
+        city = request.POST.get('city')
+        filter_data = AddEvent.objects.filter(date=date1, city=city)
+        if not filter_data:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': a})
+            return render(request, 'read.html', {'data': filter_data})
 
 
 #########################
@@ -140,11 +144,11 @@ def by_date_range(request):
         if date1 > date2:
             date1,date2 = date2,date1
 
-        a = AddEvent.objects.filter(date__gte=date1, date__lte=date2).order_by('-date')
-        if not a:
+        filter_data = AddEvent.objects.filter(date__gte=date1, date__lte=date2).order_by('-date')
+        if not filter_data:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': a})
+            return render(request, 'read.html', {'data': filter_data})
 
 
 #######################
@@ -152,11 +156,11 @@ def by_date_range(request):
 
 def up_and_past(request):
     date1 = datetime.datetime.today()
-    a1 = AddEvent.objects.filter(date=date1).order_by('-date')
-    a2 = AddEvent.objects.filter(date__gt=date1).order_by('-date')
-    a3 = AddEvent.objects.filter(date__lt=date1).order_by('-date')
+    filter_data_today = AddEvent.objects.filter(date=date1).order_by('-date')
+    filter_data_upcome = AddEvent.objects.filter(date__gt=date1).order_by('-date')
+    filter_data_past = AddEvent.objects.filter(date__lt=date1).order_by('-date')
 
-    return render(request, 'result.html', {'d1': a1, 'd2': a2, 'd3': a3})
+    return render(request, 'read_all.html', {'data1': filter_data_today, 'data2': filter_data_upcome, 'data3': filter_data_past})
 
 
 ##############################

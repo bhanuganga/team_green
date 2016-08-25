@@ -1,4 +1,4 @@
-function getCookie(name) {// get csrf-token , this method is used before every ajax call
+function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         var cookies = document.cookie.split(';');
@@ -15,232 +15,91 @@ function getCookie(name) {// get csrf-token , this method is used before every a
 }
 
 
+function setup(csrftoken) {
+    $.ajaxSetup({
+        beforeSend: function(xhr) {
+            if (!this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+}
 
-function add() {                                    // Onclick add button with ajax call
+
+function add() {
     var name = $('#name').val();
     var date = $('#date').val();
     var info = $('#info').val();
     var cities = $('#cities').val();
     var city_other = $('#city1').val();
-        var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
+    var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
-        if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
+    if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
 
-            var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-            $.ajax({
-                type:'POST',
-                url:"/add",
-                data:{
-                    'name':name, 'date':date, 'info':info, 'cities':cities, 'city1': city_other
-                },
-                success:function (response_data) {
-                    alert(response_data);
-                    $('#add_form')[0].reset();
-                },
-                error:function () {
-                    alert("Something wrong")
-                }
-            });
-
-
-        }
-        else{
-            alert("One or more invalid fields.");
-
-        }
-    }
-
-
-      //bycity_script
-    function bycity(){
-        var city=$('#city').val();
-        
         var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        
-        $.ajax({
-            type: "POST",
-            url: "/by_city",
-            data: {'city': city},
-            success: function (data) {
-                if (data == 'no event found') {
-                    alert(data);
-                }
-                else {
-                    $("#message").html(data);
-                }
-            },
-                error:function () {
-                    alert("Something wrong")
-                }
+        setup(csrftoken);
 
+        $.ajax({
+            type:'POST',
+            url:"/add",
+            data:{
+                'name':name, 'date':date, 'info':info, 'cities':cities, 'city1': city_other
+            },
+            success:function (response_data) {
+                var alertBox = '<div data-alert class="alert-box success radius"> Event added successfully.  <a href="#" class="close">&times;</a></div>';
+                $("#onsuccess").append(alertBox).foundation().fadeOut(5000);
+                $('#add_form')[0].reset();
+            },
+            error:function () {
+                var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+            }
         });
     }
 
-
-    //bydate_script
-    function bydate(){
-        var date=$('#date1').val();
-
-        if(date != "") {
-
-            var csrftoken = getCookie('csrftoken');
-                $.ajaxSetup({
-                    beforeSend: function(xhr) {
-                        if (!this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                        }
-                    }
-                });
-
-            $.ajax({
-                type: "POST",
-                url: "/by_date",
-                data: {'date': date},
-                success: function (data) {
-                    if (data == 'no event found') {
-                        alert(data);
-                    }
-                    else {
-                        $("#message").html(data);
-                    }
-                },
-                    error:function () {
-                        alert("Something wrong")
-                    }
-
-            });
-        }
-
-        else{
-            alert("One or more invalid fields.");
-        }
+    else{
+        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
+        $("#message").append(alertBox).foundation().fadeOut(5000);
     }
+}
 
-    //date_city_script
-    function date_city(){
-        var date=$('#date1').val();
-        var city=$('#city').val();
 
-        if(date != "") {
+function Check(val){
+    var element=$('#city1');
+    if(val=='other')
+        element.show();
+    else
+        element.hide();
+}
 
-            var csrftoken = getCookie('csrftoken');
-                $.ajaxSetup({
-                    beforeSend: function(xhr) {
-                        if (!this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                        }
-                    }
-                });
 
-            $.ajax({
-                type: "POST",
-                url: "/by_date_and_city",
-                data: {'date': date, 'city':city},
-                success: function (data) {
-                    if (data == 'no event found') {
-                        alert(data);
-                    }
-                    else {
-                        $("#message").html(data);
-                    }
-                },
-                    error:function () {
-                        alert("Something wrong")
-                    }
 
-            });
+function search() {
+    var event_id = $('#event_name').val();
 
+    var csrftoken = getCookie('csrftoken');
+    setup(csrftoken);
+
+    $.ajax({
+        type: "POST",
+        url: "/search",
+        data: {'event_name': event_id},
+        success: function (data) {
+            if (data == "please select a name from list!") {
+                var alertBox = '<div data-alert class="alert-box success radius"> Select a name.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+            }
+            else {
+                $('#onsuccess').html(data);
+            }
+        },
+        error:function () {
+            var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+            $("#message").append(alertBox).foundation().fadeOut(5000);
         }
-        else{
-            alert("One or more invalid fields.");
-        }
-    }
 
-
-
-    //daterange_script
-   function by_date_range(){
-       var fromdate = $('#from').val();
-       var todate = $('#to').val();
-
-       if(fromdate != "" && todate != "") {
-       
-           var csrftoken = getCookie('csrftoken');
-                $.ajaxSetup({
-                    beforeSend: function(xhr) {
-                        if (!this.crossDomain) {
-                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                        }
-                    }
-                });
-
-           $.ajax({
-                type: "POST",
-                url: "/by_date_range",
-                data: {'fromdate': fromdate, 'todate':todate},
-                success: function (data) {
-
-
-                    if (data == 'no event found') {
-                        location.reload();
-                        alert(data);
-
-                    }
-                    else {
-                        $("#message").html(data);
-                    }
-                },
-                    error:function () {
-                        alert("Something wrong");
-                    }
-
-           });
-       }
-       else{
-            alert("One or more invalid fields.");
-       }
-    }
-
-      //search_script
-function search() {                                  //search_script
-        var event_is = $('#event_name').val();
-    
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        $.post("/search",
-            {'event_name':event_is},
-            function (data) {
-               if(data=="please select a name from list!"){
-                   $('#search_result').slideUp();
-                   alert(data);
-
-               }
-               else{
-                    $('#search_result').html(data);
-                    $('#search_result').slideDown();
-                    }
-           });
-       }
+    });
+}
 
 
 function updat() {
@@ -251,80 +110,229 @@ function updat() {
     var city = $('#city').val();
     var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
-    if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(city)){
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        $.post("/update",
-            {'id': event_id, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':city, 'upd_info':upd_info},
-                function (response) {
-                    if(response == "1"){
-                        location.reload();
-                        alert("Event data updated");
-                    }
-                    else{
-                        alert(response);
-                    }
-                });
+    if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(city)) {
 
+        var csrftoken = getCookie('csrftoken');
+        setup(csrftoken);
+
+        $.ajax({
+            type: "POST",
+            url: "/update",
+            data: {'id': event_id, 'upd_name': upd_name, 'upd_date': upd_date, 'upd_city': city, 'upd_info': upd_info},
+            success: function (response) {
+                    setTimeout(function () {
+                        location.reload();
+                    }, 5000);
+                    var alertBox = '<div data-alert class="alert-box success radius"> Event updated.  <a href="#" class="close">&times;</a></div>';
+                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                },
+            error: function() {
+                var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+            }
+        });
     }
+
     else{
-        alert("One or more fields invalid")
+        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
+        $("#message").append(alertBox).foundation().fadeOut(5000);
     }
 }
 
 
 function del() {
-        var event_id = $('#event_id').val();
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        $.post("/delete",
-            {'id':event_id},
-        function (response) {
-            if(response == event_id){
-                alert("no id");
-            }
-            else{
-                location.reload();
-                alert("deleted");
-                }
-        });
-        }
+    var event_id = $('#event_id').val();
 
+    var csrftoken = getCookie('csrftoken');
+    setup(csrftoken);
+
+    $.ajax({
+        type: "POST",
+        url: "/delete",
+        data: {'id': event_id},
+        success: function (response) {
+            setTimeout(function () {
+                location.reload();
+            },5000);
+            var alertBox = '<div data-alert class="alert-box success radius"> Event deleted.  <a href="#" class="close">&times;</a></div>';
+            $("#message").append(alertBox).foundation().fadeOut(5000);
+        }
+    });
+}
 
 
 function setSelectedIndex(s, v) {
-
     for ( var i = 0; i < s.options.length; i++ ) {
-
         if ( s.options[i].text == v ) {
-
             s.options[i].selected = true;
-
             return;
-
         }
+    }
+}
 
+
+function bycity(){
+    var city=$('#city').val();
+
+    var csrftoken = getCookie('csrftoken');
+    setup(csrftoken);
+
+    $.ajax({
+        type: "POST",
+        url: "/by_city",
+        data: {'city': city},
+        success: function (data) {
+            if (data == 'no event found') {
+                var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+                setTimeout(function () {
+                    location.reload();
+                },1000);
+            }
+            else {
+                $("#onsuccess").html(data);
+            }
+        },
+        error:function () {
+            var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+            $("#message").append(alertBox).foundation().fadeOut(5000);
+            setTimeout(function () {
+                location.reload();
+            },1000);
+        }
+    });
+}
+
+
+function bydate(){
+    var date=$('#date1').val();
+
+    if(date != "") {
+
+        var csrftoken = getCookie('csrftoken');
+        setup(csrftoken);
+
+        $.ajax({
+            type: "POST",
+            url: "/by_date",
+            data: {'date': date},
+            success: function (data) {
+                if (data == 'no event found') {
+                    var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
+                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }
+                else {
+                    $("#onsuccess").html(data);
+                }
+            },
+            error:function () {
+                var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+                setTimeout(function () {
+                    location.reload();
+                },1000);
+            }
+        });
     }
 
+    else{
+        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
+        $("#message").append(alertBox).foundation().fadeOut(5000);
+        setTimeout(function () {
+            location.reload();
+        },1000);
+    }
 }
 
- function Check(val){
- var element=document.getElementById('city1');
- if(val=='other')
-   element.style.display='block';
- else
-   element.style.display='none';
+
+function date_city(){
+    var date=$('#date1').val();
+    var city=$('#city').val();
+
+    if(date != "") {
+
+        var csrftoken = getCookie('csrftoken');
+        setup(csrftoken);
+
+        $.ajax({
+            type: "POST",
+            url: "/by_date_and_city",
+            data: {'date': date, 'city':city},
+            success: function (data) {
+                if (data == 'no event found') {
+                    var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
+                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }
+                else {
+                    $("#onsuccess").html(data);
+                }
+            },
+            error:function () {
+                var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+                setTimeout(function () {
+                    location.reload();
+                },1000);
+            }
+        });
+    }
+
+    else{
+        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
+        $("#message").append(alertBox).foundation().fadeOut(5000);
+        setTimeout(function () {
+            location.reload();
+        },1000);
+    }
 }
 
+
+function by_date_range(){
+    var fromdate = $('#from').val();
+    var todate = $('#to').val();
+
+    if(fromdate != "" && todate != "") {
+       
+        var csrftoken = getCookie('csrftoken');
+        setup(csrftoken);
+
+        $.ajax({
+            type: "POST",
+            url: "/by_date_range",
+            data: {'fromdate': fromdate, 'todate':todate},
+            success: function (data) {
+                if (data == 'no event found') {
+                    var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
+                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }
+                else {
+                    $("#onsuccess").html(data);
+                }
+            },
+            error:function () {
+                var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
+                $("#message").append(alertBox).foundation().fadeOut(5000);
+                setTimeout(function () {
+                    location.reload();
+                },1000);
+            }
+        });
+    }
+
+    else{
+        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
+        $("#message").append(alertBox).foundation().fadeOut(5000);
+        setTimeout(function () {
+            location.reload();
+        },1000);
+    }
+}
