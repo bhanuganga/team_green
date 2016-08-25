@@ -2,32 +2,29 @@
 
 {% block content %}
 
-<form action="/by_date_and_city" method="POST">
+<form>
 
     <div class="row section">
         <div class=" columns large-4 small-5  ">
-           date  <input type = "date" id="date1" name = "date" />
+           <label for="date1">Date </label><input type="date" id="date1" name="date" />
         </div>
         <div class="columns large-4 small-5 ">
-            city     <select name="city" id="city1">
-                        {%for i in data%}
-                    <option value="{{i.city_id}}">{{i.city_id}}</option>
-                    {%endfor%}
-                        </select>
+            <label for="city">city </label>
+            <select name="city" id="city">
+                {%for city in data%}
+                    <option value="{{city.city_id}}">{{city.city_id}}</option>
+                {%endfor%}
+            </select>
         </div>
 
-         <div class="columns large-2 small-2 end " style="padding-top: 25px">
+         <div id="date_city_btn" class="columns large-2 small-2 end ">
             <input onclick="date_city()"  type="button" class="button postfix" value="submit"><br><br>
         </div>
 
     </div>
-{{ i }}
 </form>
 
 
 
 <div id=message class="row columns large-centered" ></div>
-<script src="/static/script.js"></script>
-
-
 {% endblock%}

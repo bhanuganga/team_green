@@ -9,39 +9,39 @@
     <th>INFORMATION</th>
     </tr>
         <tr>
-    <td colspan="4" style="text-align: center;color:rebeccapurple;"><strong>Today's events</strong></td>
+    <td colspan="4" class="td_heading"><strong>Today's events</strong></td>
   </tr>
 
-       {% for i in d1 %}
+       {% for event in today_list %}
     <tr>
-        <td>{{i.name}}</td>
-        <td>{{i.date}}</td>
-        <td>{{i.city}}</td>
-        <td>{{i.info}}</td>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
       </tr>
         {% endfor %}
     <tr>
     <tr>
-    <td colspan="4" style="text-align: center;color:rebeccapurple;"><strong>Upcoming events</strong></td>
+    <td colspan="4" class="td_heading"><strong>Upcoming events</strong></td>
   </tr>
-        {% for i in d2 %}
+        {% for event in upcoming_list %}
     <tr>
-        <td>{{i.name}}</td>
-        <td>{{i.date}}</td>
-        <td>{{i.city}}</td>
-        <td>{{i.info}}</td>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
       </tr>
         {% endfor %}
     <tr>
     <tr>
-    <td colspan="4" style="text-align: center;color:rebeccapurple;"><strong>Past events</strong></td>
+    <td colspan="4" class="td_heading" ><strong>Past events</strong></td>
   </tr>
-       {% for i in d3 %}
+       {% for event in past_list %}
     <tr>
-        <td>{{i.name}}</td>
-        <td>{{i.date}}</td>
-        <td>{{i.city}}</td>
-        <td>{{i.info}}</td>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
       </tr>
         {% endfor %}
     <tr>

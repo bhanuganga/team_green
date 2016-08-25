@@ -14,7 +14,15 @@ function getCookie(name) {                                // get csrf-token , th
                 return cookieValue;
             }
 
-function add() {                                    // Onclick add button with ajax calls
+$.ajaxSetup({
+            beforeSend: function(xhr) {
+                if (!this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));//get cookie from getCookie(...) func
+                }
+            }
+            });
+
+$("#add_button").click(function() {                                    // Onclick add button with ajax calls
         var name = $('#name').val();
         var date = $('#date').val();
         var info = $('#info').val();
@@ -23,19 +31,9 @@ function add() {                                    // Onclick add button with a
         var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
         if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
-
-            var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
             $.ajax({
                 type:'POST',
-                url:"/add",
+                url:"api/add",
                 data:{
                     'name':name, 'date':date, 'info':info, 'cities':cities, 'city1': city_other
                 },
@@ -54,60 +52,43 @@ function add() {                                    // Onclick add button with a
             alert("One or more invalid fields.");
 
         }
-    }
-function Check(val){
- var element=document.getElementById('city1');
- if(val=='other')
-   element.style.display='block';
- else
-   element.style.display='none';
-}
+    });
 
-      //search_script
-function search() {
-        var event_is = $('#event_name').val();
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
+$("#cities").change(function(){          //#TODO task 1
+ var element=$('#city1');
+ if(this.val()=="Other")
+   element.show();
+ else
+   element.hide();
+});
+
+
+$("#search_button").click(function() {                             //search_script
+        var event_is = $('#event_is').val();
+        $.post("api/search",
+            {'event_is':event_is},
+            function (data) {
+                if (data == "please select a name from list!") {
+                    $('#search_result').html(data);
+                    $('#search_result').addClass("large-2");
+                } else {
+                    $('#search_result').html(data);
+                    $('#search_result').removeClass("large-2");
                 }
             });
-        $.post("/search",
-            {'event_name':event_is},
-            function (data) {
-               if(data=="please select a name from list!"){
-                   $('#search_result').slideUp();
-                  // alert(data);
-
-               }
-               else{
-                    $('#search_result').html(data);
-                    $('#search_result').slideDown();
-                    }
-           });
-       }
+       });
 
 
-function updat() {
-    var event_id = $('#event_id').val();
-    var upd_name = $('#upd_name').val();
-    var upd_date = $('#upd_date').val();
-    var upd_info = $('#upd_info').val();
-    var upd_city = $('#city').val();
+$("#update_btn").click(function() {                          //# TODO task 2 update_script
+    var event_id = $("#event_id").val();
+    var upd_name = $("#upd_name").val();
+    var upd_date = $("#upd_date").val();
+    var upd_info = $("#upd_info").val();
+    var upd_city = $("#city").val();
     var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
     if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(upd_city)){
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        $.post("/update",
+        $.post("api/update",
             {'id': event_id, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':upd_city, 'upd_info':upd_info},
                 function (response) {
                         location.reload();
@@ -119,29 +100,21 @@ function updat() {
     else{
         alert("One or more fields invalid")
     }
-}
+});
 
 
-function del() {
+$("#delete_btn").click(function() {                                //# TODO task 3 delete_script
         var event_id = $('#event_id').val();
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-        $.post("/delete",
+        $.post("api/delete",
             {'id':event_id},
         function (response) {
             location.reload();
             alert(response);
 
         });
-        }
+});
 
-function setSelectedIndex(s, v) {
+function setSelectedIndex(s, v) {               // For pre-selecting the city
 
     for ( var i = 0; i < s.options.length; i++ ) {
 
@@ -156,108 +129,23 @@ function setSelectedIndex(s, v) {
     }
 
 }
-    //bydate_script
-    function bydate(){
-        var date=$('#date1').val();
 
-        if( date != "") {
+function by_date(){                  //# TODO task 4 by_date_script
+    var date=$('#date1').val();
 
-            var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function (xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
-            $.ajax({
-                type: "POST",
-                url: "/by_date",
-                data: {'date': date},
-                success: function (response) {
-                    if (response == []) {
-                        location.reload();
-                        alert("No events on selected date!");
-                        }
-                    else {
-                        $("#message").html(response);
-                        $("#message").slideDown();
-                    }
-                },
-                error: function () {
-                    alert("Something wrong")
-                }
-
-            });
-        }
-            else{
-            alert("One or more invalid fields.");
-
-        }
-    }
-
-        //bycity_script
-    function bycity(){
-        var city=$('#city').val();
-
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
+    if( date != "") {
 
         $.ajax({
             type: "POST",
-            url: "/by_city",
-            data: {'city': city},
-            success: function (data) {
-                if (data == []) {
-                    alert("No events in selected city");
+            url: "api/by_date",
+            data: {'date': date},
+            success: function (response) {
+                if (response == []) {
                     location.reload();
-                }
-                else {
-                    $("#message").html(data);
-                    $("#message").slideDown();
-                }
-            },
-                error:function () {
-                    alert("Something wrong")
-                }
-
-        });
-    }
-
-    //date_city_script
-    function date_city(){
-        var date=$('#date1').val();
-        var city=$('#city1').val();
-        if( date != "") {
-            
-        var csrftoken = getCookie('csrftoken');
-            $.ajaxSetup({
-                beforeSend: function(xhr) {
-                    if (!this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    alert("No events on selected date!");
                     }
-                }
-            });
-
-
-            $.ajax({
-            type: "POST",
-            url: "/by_date_and_city",
-            data: {'date': date, 'city': city},
-            success: function (data) {
-                if (data == []) {
-                    alert("Please try another choice");
-                    location.reload();
-                }
                 else {
-                    $("#message").html(data);
+                    $("#message").html(response);
                     $("#message").slideDown();
                 }
             },
@@ -268,57 +156,93 @@ function setSelectedIndex(s, v) {
         });
     }
         else{
-            alert("One or more invalid fields.");
+        alert("One or more invalid fields.");
 
-        }
     }
-
-    //daterange_script
-   function by_date_range(){
-       var date1 = $('#date3').val();
-       var date2 = $('#date2').val();
-
-       if (date1!=""&&date2!='') {
-           var csrftoken = getCookie('csrftoken');
-           $.ajaxSetup({
-               beforeSend: function (xhr) {
-                   if (!this.crossDomain) {
-                       xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                   }
-               }
-           });
+}
 
 
-           $.ajax({
-               type: "POST",
-               url: "/by_date_range",
-               data: {'date1': date1, 'date2': date2},
-               success: function (data) {
-                   if (data == []) {
-                       location.reload();
-                       alert("No Events found");
+function by_city(){              //#TODO task 5 by_city_script
+    var city=$('#city').val();
+    $.ajax({
+        type: "POST",
+        url: "api/by_city",
+        data: {'city': city},
+        success: function (data) {
+            if (data == []) {
+                alert("No events in selected city");
+                location.reload();
+            }
+            else {
+                $("#message").html(data);
+                $("#message").slideDown();
+            }
+        },
+            error:function () {
+                alert("Something wrong")
+            }
+    });
+}
 
-                   }
-                   else {
-                       $("#message").html(data);
-                       $("#message").slideDown();
-                   }
-               },
-               error: function () {
-                   alert("Something wrong");
-               }
 
-           });
-       }
-        else{
-            alert("One or more invalid fields.");
-
+function date_city(){               //# TODO task 6  date_city_script
+    var date=$('#date1').val();
+    var city=$('#city1').val();
+    if( date != "") {
+        $.ajax({
+        type: "POST",
+        url: "api/by_date_and_city",
+        data: {'date': date, 'city': city},
+        success: function (data) {
+            if (data == []) {
+                alert("Please try another choice");
+                location.reload();
+            }
+            else {
+                $("#message").html(data).slideDown();
+            }
+        },
+        error: function () {
+            alert("Something wrong")
         }
+
+    });
+}
+    else{
+        alert("One or more invalid fields.");
+
     }
+}
 
 
+function by_date_range(){            //# TODO task 7date_range_script
+   var date1 = $('#date3').val();
+   var date2 = $('#date2').val();
 
+   if (date1!=""&&date2!='') {
+       $.ajax({
+           type: "POST",
+           url: "api/by_date_range",
+           data: {'date1': date1, 'date2': date2},
+           success: function (data) {
+               if (data == []) {
+                   location.reload();
+                   alert("No Events found");
 
+               }
+               else {
+                   $("#message").html(data);
+                   $("#message").slideDown();
+               }
+           },
+           error: function () {
+               alert("Something wrong");
+           }
 
+       });
+   }
+    else{
+        alert("One or more invalid fields.");
 
-
+    }
+}

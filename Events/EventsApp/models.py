@@ -10,7 +10,7 @@ class Events(models.Model):
     city = models.ForeignKey('Cities')
 
     def __unicode__(self):
-        return u'{0}; DATE: {1}; CITY: {2};  DESC:{3}'.format(self.name, self.date, self.city, self.info)
+        return u'{0}; DATE: {1}; CITY: {2};  INFO:{3}'.format(self.name, self.date, self.city, self.info)
 
 
 class Cities(models.Model):
