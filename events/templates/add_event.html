@@ -1,3 +1,4 @@
+
 {% extends "layout.html" %}
 {% block title %}Add{% endblock%}
 {% block body %}
@@ -21,11 +22,12 @@
         <div class="row">
             <div class="small-6 columns">
                 City : <select id='cities' name='city' onchange='Check(this.value);'>
+                <option>select your city</option>
                   {%for i in data%}
                 <option value="{{i.city}}">{{i.city}}</option>
                     {%endfor%}
                 <option value="other">Other</option>
-                </select><br><br>
+                </select><p>*to add newcity select other option</p><br>
             </div>
             <div class="small-6 columns">
                 <br><input type="text" name="city1" id="city1" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" style='display:none;' placeholder="Enter the city name manually"/>
@@ -38,9 +40,14 @@
             </div>
         </div>
 
+<div id="success"></div>
+         <div id="error" ></div>
+    <div id="regexerror" ></div>
+
 </form>
 </div>
 </div>
+
 <script src="/static/script.js"></script>
 
 

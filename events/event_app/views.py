@@ -1,5 +1,4 @@
 from datetime import date
-
 from django.http import HttpResponse
 from django.shortcuts import render
 from models import *
@@ -14,7 +13,7 @@ def add_event_html(request):
 
 
 def add(request):
-    data = [city.city for city in Cities.objects.all()]
+    data = [obj.city for obj in Cities.objects.all()]
     name = request.POST.get('name')
     date = request.POST.get('date')
     city = request.POST.get('cities')
@@ -49,7 +48,7 @@ def search(request):
 
 
 def update(request):
-    data = [city.city for city in Cities.objects.all()]
+    data = [obj.city for obj in Cities.objects.all()]
     upd_name = request.POST.get("upd_name")
     upd_date = request.POST.get("upd_date")
     upd_city = request.POST.get("upd_city")
@@ -88,7 +87,7 @@ def by_date(request):
         if not list:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': list})
+            return render(request, 'read.html', {'list': list})
 
 
 def by_city_html(request):
@@ -102,7 +101,7 @@ def by_city(request):
             return HttpResponse('no event found')
         else:
 
-            return render(request, 'read.html', {'d': list})
+            return render(request, 'read.html', {'list': list})
 
 
 def by_city_date_html(request):
@@ -116,7 +115,7 @@ def by_date_and_city(request):
             return HttpResponse('no event found')
         else:
 
-            return render(request, 'read.html', {'d': list})
+            return render(request, 'read.html', {'list': list})
 
 
 def by_date_range_html(request):
@@ -125,20 +124,20 @@ def by_date_range_html(request):
 
 def by_date_range(request):
     if request.method == 'POST':
-        date1 = request.POST.get('date1')
-        date2 = request.POST.get('date2')
-        if date1>date2:
-            date1,date2=date2,date1
-        list = Event.objects.filter(event_date__gte=date1).filter(event_date__lte=date2).order_by('event_date')
+        fromdate = request.POST.get('fromdate')
+        todate = request.POST.get('todate')
+        if fromdate>todate:
+            fromdate,todate=todate,fromdate
+        list = Event.objects.filter(event_date__gte=fromdate).filter(event_date__lte=todate).order_by('event_date')
         if list == []:
             return HttpResponse('no event found')
         else:
-            return render(request, 'read.html', {'d': list})
+            return render(request, 'read.html', {'list': list})
 
 
 def up_and_past(request):
-    d = Event.objects.filter(event_date=date.today()).order_by('event_date')
-    d1 = Event.objects.filter(event_date__gt=date.today()).order_by('event_date')
-    d2 = Event.objects.filter(event_date__lt=date.today()).order_by('event_date')
+    today = Event.objects.filter(event_date=date.today()).order_by('event_date')
+    upcoming = Event.objects.filter(event_date__gt=date.today()).order_by('event_date')
+    past = Event.objects.filter(event_date__lt=date.today()).order_by('event_date')
 
-    return render(request, 'result.html', {'d1': d, 'd2': d1, 'd3': d2})
+    return render(request, 'up_and_past.html', {'today': today, 'upcoming': upcoming, 'past': past})

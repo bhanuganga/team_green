@@ -1,51 +1,4 @@
-/*
-    h1{
-    font-family:toms handwritten new; display:inline-block; vertical-align: middle;
-    }
 
-    h3{
-    font-family:toms handwritten new; font-size:40pt;
-    }
-
-    .banner{
-    font-size:24pt;
-     text-align: center
-    }
-
-  a
-    font-family:"Terminal Dosis"; font-size :13pt;background-color: black}
-  form{
-		border:1px solid black;
-		width:500px;
-		height:auto;
-		margin-left:28%;
-		margin-top: 10%;
-		border-radius: 5px;
-        text-align: center;
-        transition: box-shadow 0.8s;
-        font-family:"Terminal Dosis";
-        font-size:18pt;
-
-	}
-  form:hover{
-    box-shadow: 10px 10px 5px grey;
-  }
-  .section{
-
-	 font-size:18pt ;
-	 vertical-align: middle;
-
-	  border-radius:5px;
-	  text-align: center;
-}
-  input{
-    border-color: lightgrey;
-    width: 210px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-
-*/
 br{
 clear: left;
 }
@@ -55,18 +8,27 @@ clear: left;
    border: 1px solid black;
 
 
+
    }
 
 table{
 width: 50%;
 margin-bottom:50px;
-text-align:center;
 
+}
+
+table tr th {
+    text-align: center;
+}
+
+table tr td {
+    text-align: center;
 }
 
 td,th{
 height: 30px;
 vertical-align: middle;
+
 
 }
 
