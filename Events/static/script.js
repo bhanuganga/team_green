@@ -1,4 +1,4 @@
-function getCookie(name) {                                // get csrf-token , this method is used before every ajax call
+function getCookie(name) {                                // to get csrf-token
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
                     var cookies = document.cookie.split(';');
@@ -16,18 +16,24 @@ function getCookie(name) {                                // get csrf-token , th
 
 $.ajaxSetup({
             beforeSend: function(xhr) {
-                if (!this.crossDomain) {
+                if (!this.crossDomain) {                // crossDomain is bool type
                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));//get cookie from getCookie(...) func
                 }
             }
             });
 
-$("#add_button").click(function() {                                    // Onclick add button with ajax calls
+
+var tab_check =$(".tab-check").click(function () {
+    tab_check.removeClass("is-active");
+    $(this).addClass("is-active");
+})
+
+$("#add_button").click(function() {                     // Onclick add button with ajax calls
         var name = $('#name').val();
         var date = $('#date').val();
         var info = $('#info').val();
         var cities = $('#cities').val();
-        var city_other = $('#city1').val();
+        var other_city = $('#other_city').val();
         var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
         if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
@@ -35,7 +41,7 @@ $("#add_button").click(function() {                                    // Onclic
                 type:'POST',
                 url:"api/add",
                 data:{
-                    'name':name, 'date':date, 'info':info, 'cities':cities, 'city1': city_other
+                    'name':name, 'date':date, 'info':info, 'cities':cities, 'other_city': other_city
                 },
                 success:function (response_data) {
                     alert(response_data);
@@ -54,37 +60,38 @@ $("#add_button").click(function() {                                    // Onclic
         }
     });
 
-$("#cities").change(function(){          //#TODO task 1
- var element=$('#city1');
- if(this.val()=="Other")
-   element.show();
+$("#other_city").hide();
+$("#cities").change(function(){          //#TODO task 1--DONE
+ var new_city=$('#other_city');
+ if($("#cities").val()!="Other")
+   new_city.hide();
  else
-   element.hide();
+   new_city.show();
 });
 
 
 $("#search_button").click(function() {                             //search_script
         var event_is = $('#event_is').val();
+        var search_result_div = $("#search_result");
         $.post("api/search",
             {'event_is':event_is},
             function (data) {
-                if (data == "please select a name from list!") {
-                    $('#search_result').html(data);
-                    $('#search_result').addClass("large-2");
+                if (data == "please select a name from the list!") {
+                    search_result_div.html(data).addClass("large-2");
                 } else {
-                    $('#search_result').html(data);
-                    $('#search_result').removeClass("large-2");
+                    search_result_div.html(data).removeClass("large-2");
                 }
             });
        });
 
-
-$("#update_btn").click(function() {                          //# TODO task 2 update_script
+// For elements(forms|btn|any_tag|result of ajax call ) populated as a result of an action normal onclick doesn't work,
+// use following syntax: $('body').on('click', '#selector", handler|handler(){});
+$('body').on('click', "#update_btn", function() {      //# TODO task 2--DONE update_script
     var event_id = $("#event_id").val();
     var upd_name = $("#upd_name").val();
     var upd_date = $("#upd_date").val();
     var upd_info = $("#upd_info").val();
-    var upd_city = $("#city").val();
+    var upd_city = $("#upd_city").val();
     var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
 
     if(re.test(upd_name) && upd_date != "" && re.test(upd_info)  && /^\w+$/.test(upd_city)){
@@ -98,12 +105,12 @@ $("#update_btn").click(function() {                          //# TODO task 2 upd
 
     }
     else{
-        alert("One or more fields invalid")
+        alert("One or more fields invalid");
     }
 });
 
 
-$("#delete_btn").click(function() {                                //# TODO task 3 delete_script
+$('body').on("click","#delete_btn", function() {      //# TODO task 3--DONE delete_script
         var event_id = $('#event_id').val();
         $.post("api/delete",
             {'id':event_id},
@@ -114,24 +121,12 @@ $("#delete_btn").click(function() {                                //# TODO task
         });
 });
 
-function setSelectedIndex(s, v) {               // For pre-selecting the city
 
-    for ( var i = 0; i < s.options.length; i++ ) {
 
-        if ( s.options[i].text == v ) {
 
-            s.options[i].selected = true;
-
-            return;
-
-        }
-
-    }
-
-}
-
-function by_date(){                  //# TODO task 4 by_date_script
+$("#by_date_btn").click(function(){                  //# TODO task 4--DONE by_date_script
     var date=$('#date1').val();
+    var message_div = $("#message");
 
     if( date != "") {
 
@@ -145,8 +140,8 @@ function by_date(){                  //# TODO task 4 by_date_script
                     alert("No events on selected date!");
                     }
                 else {
-                    $("#message").html(response);
-                    $("#message").slideDown();
+                    message_div.html(response);
+                    message_div.slideDown();
                 }
             },
             error: function () {
@@ -159,11 +154,12 @@ function by_date(){                  //# TODO task 4 by_date_script
         alert("One or more invalid fields.");
 
     }
-}
+});
 
 
-function by_city(){              //#TODO task 5 by_city_script
+$("#by_city_btn").click(function(){              //#TODO task 5--DONE by_city_script
     var city=$('#city').val();
+    var message_div = $("#message");
     $.ajax({
         type: "POST",
         url: "api/by_city",
@@ -174,20 +170,20 @@ function by_city(){              //#TODO task 5 by_city_script
                 location.reload();
             }
             else {
-                $("#message").html(data);
-                $("#message").slideDown();
+                message_div.html(data);
+                message_div.slideDown();
             }
         },
             error:function () {
                 alert("Something wrong")
             }
     });
-}
+});
 
 
-function date_city(){               //# TODO task 6  date_city_script
-    var date=$('#date1').val();
-    var city=$('#city1').val();
+$("#date_city_btn").click(function(){               //# TODO task 6--DONE date_city_script
+    var date=$('#date_in_date_city').val();
+    var city=$('#city_in_date_city').val();
     if( date != "") {
         $.ajax({
         type: "POST",
@@ -212,18 +208,18 @@ function date_city(){               //# TODO task 6  date_city_script
         alert("One or more invalid fields.");
 
     }
-}
+});
 
 
-function by_date_range(){            //# TODO task 7date_range_script
-   var date1 = $('#date3').val();
-   var date2 = $('#date2').val();
-
-   if (date1!=""&&date2!='') {
+$("#by_date_range_btn").click(function(){            //# TODO task 7--DONE date_range_script
+    var from_date = $('#from_date').val();
+    var to_date = $('#to_date').val();
+    var message_div = $("#message");
+   if (from_date!="" && to_date!="") {
        $.ajax({
            type: "POST",
            url: "api/by_date_range",
-           data: {'date1': date1, 'date2': date2},
+           data: {'from_date': from_date, 'to_date': to_date},
            success: function (data) {
                if (data == []) {
                    location.reload();
@@ -231,8 +227,8 @@ function by_date_range(){            //# TODO task 7date_range_script
 
                }
                else {
-                   $("#message").html(data);
-                   $("#message").slideDown();
+                   message_div.html(data);
+                   message_div.slideDown();
                }
            },
            error: function () {
@@ -245,4 +241,4 @@ function by_date_range(){            //# TODO task 7date_range_script
         alert("One or more invalid fields.");
 
     }
-}
+});

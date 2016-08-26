@@ -28,7 +28,7 @@ def add(request):
     if city:
         city = city.capitalize()
     if city == 'Other':
-        city = request.POST.get('city1').capitalize()
+        city = request.POST.get('other_city').capitalize()
     info = request.POST['info']
     if city not in data:
         city_instance = Cities(place=city)
@@ -51,12 +51,13 @@ def search_modify_html(request):
 def search(request):
     """Through ajax call: Search Event by id."""
     if request.method == 'POST':
-        data = Cities.objects.values()
+        cities_list = Cities.objects.values()
         event_id = request.POST["event_is"]
         if event_id != "default":
             event_instance = Events.objects.get(id=event_id)
             event_instance.date = str(event_instance.date)
-            return render(request, 'search_result.html', {'instance': event_instance, 'id': event_id, 'data': data})
+            return render(request, 'search_result.html', {'instance': event_instance, 'id': event_id,
+                                                          'cities_list': cities_list})
         else:
             return HttpResponse("please select a name from the list!")
 
@@ -147,9 +148,10 @@ def by_date_and_city(request):
 
 def up_and_past(request):
     """Get three lists(today, upcoming, past) and renders to specific html."""
-    today = Events.objects.filter(date=date.today()).order_by("city")
-    upcoming = Events.objects.filter(date__gt=date.today()).order_by("date")
-    past = Events.objects.filter(date__lt=date.today()).order_by('date')
+    today_date = str(date.today())
+    today = Events.objects.filter(date=today_date)
+    upcoming = Events.objects.filter(date__gt=today_date).order_by("date")
+    past = Events.objects.filter(date__lt=today_date).order_by('date')
     return render(request, "result.html", {'today_list': today, 'upcoming_list': upcoming, 'past_list': past})
 
 
@@ -160,9 +162,9 @@ def by_date_range_html(request):
 def by_date_range(request):
     """.ajax() call: search all events within the date range."""
     if request.method == 'POST':
-        date1 = request.POST.get('date1')
-        date2 = request.POST.get('date2')
-        events_list = Events.objects.filter(date__gte=date1, date__lte=date2).order_by("date")
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        events_list = Events.objects.filter(date__gte=from_date, date__lte=to_date).order_by("date")
         if events_list:
             return render(request, 'read.html', {'events': events_list})
         else:

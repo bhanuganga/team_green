@@ -6,41 +6,38 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}foundation.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}foundation.min.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}normalize.css">
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css", media="all">
     <link rel="icon" href="{{ STATIC_URL }}icon.png"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 </head>{% endblock %}
 <body>{% csrf_token %}
-<div class="row">
-    <div class="columns small-1 large-1 large-offset-4 small-offset-4">
-        <br><img id='img' src='{{ STATIC_URL }}icon.png'>
-    </div>
-    <div class="columns small-7 large-7 ">
-        <h1 >Eventify</h1>
-    </div>
-</div>
-<nav class="top-bar" data-topbar role="navigation">
-    <ul class="title-area">
-    <li class="name">
-      <h1><a href="/" class="title-area  name h1>a">About Project</a></h1>
-    </li>
-     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+ <header class="header">
+  <h1 class="headline">EventsApp</h1>
+  <ul class="header-subnav">
+    <li ><a href="/" class="tab-check">ABOUT</a></li>
+    <li><a href="add_event_html"  class="tab-check">ADD EVENT</a></li>
+    <li> <a href="search_modify_html" class="tab-check">SEARCH/MODIFY</a></li>
+    <li><a href="/by_date_html" class="tab-check">FILTERS</a></li>
   </ul>
-
-  <section class="top-bar-section">
-   <ul class="left">
-       <li> <a href="add_event_html">Add</a></li>
-       <li> <a href="search_modify_html">Search/Modify</a></li>
-       <li ><a href="/by_date_html">Filters</a></li>
-   </ul>
-  </section>
-</nav>
+</header>
 <!--  body here -->
 <div id="content">
     {% block body %}
         <h3>Django App </h3>
+        <ol>
+            <li>Add an event.</li>
+            <li>Search and Modify in single page.</li>
+            <li>Filters
+                <ul>
+                    <li>filter by date.</li>
+                    <li>filter by city.</li>
+                    <li>filter by date and city.</li>
+                    <li>list of all events categorized according to date.</li>
+                    <li>filter by date range.</li>
+                </ul>
+            </li>
+        </ol>
     {% endblock %}
 </div>
 
