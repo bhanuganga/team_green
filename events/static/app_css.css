@@ -1,65 +1,118 @@
+.image{
+    position: relative;
+    width: 100%;
+}
+
+
+
+img {
+    width: 100%;
+    height: 250px;
+    border: 0;
+}
+
+#textonimage{
+    position: absolute;
+    top: -7%;
+    text-align: center;
+    left:43%;
+    font-size: 25px;
+ }
+
+.button-group{
+    position: absolute;
+    top:190px;
+    left: 35%;
+}
+
+#mysite,#mysite1,#mysite2,#mysite3{
+    border: 2px solid white;
+    border-radius: 15px;
+    background-color: transparent;
+    color: white;
+}
+
+#mysite:hover,#mysite1:hover,#mysite2:hover,#mysite3:hover{
+    border:1px solid salmon;
+    border-radius: 15px;
+    color: salmon;
+    background-color: transparent;
+}
+
+
+.top-bar .title-area{
+    background-color: lightslategray;
+}
 
 br{
 clear: left;
 }
-
-  table,td,th{
+table,td,th{
     border-collapse: collapse;
-   border: 1px solid black;
-
-
-
-   }
+    border: 1px solid black;
+}
 
 table{
-width: 50%;
-margin-bottom:50px;
-
+    width: auto;
+    margin-bottom:50px;
 }
 
-table tr th {
-    text-align: center;
-}
-
-table tr td {
+table tr th ,table tr td{
     text-align: center;
 }
 
 td,th{
-height: 30px;
-vertical-align: middle;
-
-
+    height: 30px;
+    vertical-align: middle;
 }
 
-
 tr:nth-child(odd){
-background-color: 	#fbefcc;
+    background-color: 	#fbefcc;
 }
 
 th{
-background-color:#d9ad7c;
+    background-color:#d9ad7c;
 }
 
+tr:nth-child(even) {
+    background-color: #fff2df;
+}
 
-  tr:nth-child(even) {background-color: #fff2df}
 option:hover{
-background-color:red;
-position:relative;
-
+    background-color:red;
+    position:relative;
 }
+
 footer{
- line-height: 10px;
- position: fixed;
- right: 0;
- bottom: 0;
- left: 0;
- padding: 1rem;
- background-color: #555555;
- text-align: center;
+    line-height: 10px;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #555555;
+    text-align: center;
  }
-.customform{margin-top: 50px}
+
+.customform{
+    margin-top: 50px;
+}
 
 .breadcrumbs li a{
     font-size: medium;
+}
+
+#success,#error,#regexerror {
+    width: 50%;
+    text-align: center;
+    margin-left: 25%;
+}
+
+.alert-box {
+    border-radius:5px ;
+    font-size: medium;
+}
+
+#message{
+    text-align: center;
 }

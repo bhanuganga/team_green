@@ -5,23 +5,24 @@
 <form action="/by_city" method="POST">{% csrf_token %}
     <div class="row">
         <div class="large-10 columns large-centered">
+            <div class="small-8 large-7 columns">
+                <select name="city" id="city">
+                    {%for i in data%}
+                        <option value="{{i.city}}">{{i.city}}</option>
+                    {%endfor%}
+                </select>
 
-                <div class="small-8 large-7 columns">
-                    <select name="city" id="city">
-                {%for i in data%}
-                    <option value="{{i.city}}">{{i.city}}</option>
-                {%endfor%}
-                    </select>
 
+            </div>
+            <div class="small-2 large-2 columns end">
+                <input onclick="bycity()"  class = "button postfix" type="button" value="submit"><br><br>
 
-                </div>
-                <div class="small-2 large-2 columns end">
-                        <input onclick="bycity()"  class = "button postfix" type="button" value="submit"><br><br>
-
-                </div>
-            <div id="message" class="row columns large-centered" ></div>
-            <div id="error" ></div>
+            </div>
         </div>
+    </div>
+    <div class="row">
+        <div id="message" class="row columns large-centered" ></div>
+        <div id="error" ></div>
     </div>
 </form>
 

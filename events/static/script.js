@@ -36,7 +36,7 @@ function ajax(url,data) {
              url: url,
              data: data,
              success: function (response) {
-                 if (response == []) {
+                 if (response == 'no event found') {
                     $("#message").text("No Events found").slideDown();
                  }
                  else {
@@ -104,7 +104,7 @@ function search() {
         function (data) {
             if(data=="please select a name from list!"){
                 $('#search_result').slideUp();
-               var alertBox = '<div data-alert class="alert-box">please select a name from list! <a href="#" class="close">&times;</a></div>';
+               var alertBox = '<div data-alert class="alert-box"><h6>Please select a name from list! </h6><a href="#" class="close">&times;</a></div>';
                  $("#error").append(alertBox).foundation().fadeOut(5000);
             }
             else{
@@ -222,7 +222,7 @@ function setSelectedIndex(s, v) {
         else{
            var alertBox = '<div data-alert class="alert-box warning">One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
            $("#regexerror").append(alertBox).foundation().fadeOut(5000);
-           setTimeout(function(){ location.reload(); }, 1500);
+           setTimeout(function(){ location.reload(); }, 5000);
 
         }
     }

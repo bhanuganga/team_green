@@ -11,35 +11,25 @@
 
 </head>{% endblock %}
 <body>
-<div class="row con">
-    <div class="columns small-1">
-        <br><img src='/static/icon.png' style="width: 50px; height: 50px;">
+<div class="image">
+    <img src="/static/event_hands.png" alt="events">
+    <div id="textonimage">
+        <h1><b>EVENTIFY</b></h1>
     </div>
-    <div class="columns small-11 ">
-        <h1 >Eventify</h1>
+    <div class="button-group">
+        <a class="button" id="mysite" href="/">My Site</a>
+        <a class="button" id="mysite1" href="add_event_html">Add event</a>
+        <a class="button" id="mysite2" href="search_html"> Search/Modify</a>
+        <a class="button" id="mysite3" href="filters_html">Filters</a>
     </div>
-</div>
-<nav class="top-bar" data-topbar role="navigation">
-    <ul class="title-area">
-    <li class="name">
-      <h1><a href="/">My Site</a></h1>
-    </li>
-     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-  </ul>
 
-  <section class="top-bar-section">
-   <ul class="left">
-       <li> <a href="add_event_html">Add</a></li>
-       <li> <a href="search_html">Search/Modify</a></li>
-       <li ><a href="/filters_html">Filters</a></li>
-   </ul>
-  </section>
-</nav>
+</div>
+
 <!--  body here -->
     <div id="content">
-        {% block body %}
-            Simple Flask App to store into and retrieve from JSON.
+        {% block body %}<br>
+
+           <h6 style="text-align: center"><b>Eventify</b> helps you to find out the events going on around the globe and you can also <strong>create your own </strong>event.</h6>
         {% endblock %}
     </div>
 

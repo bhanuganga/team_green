@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from django.http import HttpResponse
 from django.shortcuts import render
 from models import *
@@ -129,7 +129,8 @@ def by_date_range(request):
         if fromdate>todate:
             fromdate,todate=todate,fromdate
         list = Event.objects.filter(event_date__gte=fromdate).filter(event_date__lte=todate).order_by('event_date')
-        if list == []:
+        print list
+        if not list:
             return HttpResponse('no event found')
         else:
             return render(request, 'read.html', {'list': list})
