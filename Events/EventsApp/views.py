@@ -1,14 +1,39 @@
 # Create your views here.
 from datetime import date
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from models import Events, Cities, User
 
-from models import Events, Cities
+
+def login(request):
+    email = request.POST.get('user_email')
+    password = request.POST.get('user_password')
+
+    try:
+        user = User.objects.get(user_email__exact=email, user_password__exact=password)
+        return HttpResponse(user.user_name)
+    except:
+        return HttpResponse("Please register!")
+
+
+def register(request):
+    register_name = request.POST.get('register_name')
+    register_email = request.POST.get('register_email')
+    register_phone = request.POST.get('register_phone')
+    register_password = request.POST.get('register_password')
+
+    try:
+        user = User.objects.get(user_email=register_email)
+        return HttpResponse("Already registered!<br> Please login")
+    except:
+        user_instance = User(register_name, register_email, register_phone, register_password)
+        user_instance.save()
+        return HttpResponse("Successfully registered!<br>Login now")
 
 
 # @app.route('/')
-def home(request):
-    return render(request, 'layout.html')
+def home(request, username="1"):
+    return render(request, 'layout.html', {'user_name': username})
 
 
 # @app.route("/add_event_h")    #Render add_event html

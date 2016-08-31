@@ -6,19 +6,20 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}foundation.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}foundation.min.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}normalize.css">
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css", media="all">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css" media="all">
     <link rel="icon" href="{{ STATIC_URL }}icon.png"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
 </head>{% endblock %}
-<body>{% csrf_token %}
+<body>{%csrf_token%}
  <header class="header">
-  <h1 class="headline">EventsApp</h1>
+  <h1 class="headline">EventsApp<span style="font-size: 12px; vertical-align: top;"> {{ user_name }}</span></h1>
+     <a data-reveal-id="test_modal" class="radius button">Sign In</a>
   <ul class="header-subnav">
-    <li ><a href="/" class="tab-check">ABOUT</a></li>
-    <li><a href="add_event_html"  class="tab-check">ADD EVENT</a></li>
-    <li> <a href="search_modify_html" class="tab-check">SEARCH/MODIFY</a></li>
-    <li><a href="/by_date_html" class="tab-check">FILTERS</a></li>
+    <li ><a href="/" id="header-about">ABOUT</a></li>
+    <li><a href="add_event_html"  id="header-add-event">ADD EVENT</a></li>
+    <li> <a href="search_modify_html" id="header-search-modify">SEARCH/MODIFY</a></li>
+    <li><a href="/by_date_html" id="header-filter">FILTERS</a></li>
   </ul>
 </header>
 <!--  body here -->
@@ -38,6 +39,52 @@
                 </ul>
             </li>
         </ol>
+
+
+        <div class="reveal-modal-bg" style="display: none;"></div>
+        <div id="test_modal" class="reveal-modal xlarge open" data-reveal data-options="close_on_background_click:false;">
+            <div class="row" data-equalizer>
+                <div id="modal_heading">SignIn/Register Now</div>
+                <div id="login_left" class="columns large-6 small-12 medium-6 panel" data-equalizer-watch>
+
+                            <div id="social_head">Social Connect</div>
+                            <ul class="inline-list">
+                                <li>
+                                    <a id="fb_connect"></a>
+                                </li>
+                                <li>
+                                    <a id="gplus_connect"></a>
+                                </li>
+                            </ul>
+                            <div class="columns large-10 large-centered">
+                                <div id="form_separator"></div>
+                            </div>
+                            <div id="login_head" >Login<span id="login_span">(existing users)</span></div>
+                    <form id="login_fields" data-abide>
+                            <input type="text" id="user_email" placeholder="Email" pattern="abc">
+                            <small class="error">Invalid</small>
+                            <input type="password" id="user_pwd" placeholder="Password">
+
+                            <a href="#">Forgot password?</a>
+                            <div class="button right modal_btn" id="sign_in">Sign In</div>
+                    </form>
+                </div>
+                <div class="columns large-6 medium-6 small-12 panel" data-equalizer-watch>
+                    <form id="registration_fields">
+                        <div id="register_head">Register Here</div>
+                        <input type="text" id="register_name" placeholder="Name">
+                        <input type="email" id="register_email" placeholder="Email">
+                        <input type="tel" id="register_phone" placeholder="Phone number">
+                        <input type="password" id="register_password" placeholder="Password">
+                        <div class="button right modal_btn" id="register" >Register</div>
+                    </form>
+                    <div id="registered_msg"></div>
+                </div>
+            </div>
+        <a class="close-reveal-modal" aria-label="Close">x</a>
+        </div>
+
+
     {% endblock %}
 </div>
 
@@ -48,8 +95,12 @@
 
 </footer>
 {% endblock  %}
+<script src="{{ STATIC_URL }}jquery.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}foundation.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}modernizr.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
+<script>
+    $(document).foundation();
+  </script>
 </body>
 </html>

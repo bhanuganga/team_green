@@ -3,7 +3,7 @@
 {% block body %}
 <div class="row large-centered ">
 <div class="columns">
-<form id="add_form" class="customform " >
+<form id="add_form" class="customform">
         <div class="row ">
             <div class="small-6 columns name-field">
                 <label for="name">Name : </label>
@@ -30,7 +30,7 @@
                 <option value="Other">Other</option>
                 </select><br><br>
             </div>
-            <div class="small-6 columns">
+            <div class="small-6 columns" id="extra">
                 <br><input type="text" name="city1" id="other_city" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" placeholder="Enter the city name manually"/>
             </div>
         </div>

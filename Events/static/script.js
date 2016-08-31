@@ -22,12 +22,6 @@ $.ajaxSetup({
             }
             });
 
-
-var tab_check =$(".tab-check").click(function () {
-    tab_check.removeClass("is-active");
-    $(this).addClass("is-active");
-})
-
 $("#add_button").click(function() {                     // Onclick add button with ajax calls
         var name = $('#name').val();
         var date = $('#date').val();
@@ -241,4 +235,52 @@ $("#by_date_range_btn").click(function(){            //# TODO task 7--DONE date_
         alert("One or more invalid fields.");
 
     }
+});
+
+var current_url_path = $(location).attr('pathname');
+switch (current_url_path) {
+    case "/":
+        $('#header-about').addClass("is-active");
+        break;
+
+    case "/add_event_html":
+        $("#header-add-event").addClass("is-active");
+        break;
+    case "/search_modify_html" :
+        $("#header-search-modify").addClass("is-active");
+        break;
+
+    case "/by_date_html":
+    case "/by_city_html":
+    case "/by_city_date_html":
+    case "/by_date_range_html":
+    case "/up_and_past":
+        $("#header-filter").addClass("is-active");
+        break;
+
+}
+
+$('body').on('click', '#sign_in',function () {
+    var user_email = $("#user_email");
+    var user_password = $("#user_pwd");
+    $.ajax({url:"user/login",
+        data:{"user_email":user_email, "user_password":user_password},
+    success:function (response) {
+        $.get("/", {'user_name':response});
+    }
+    });
+});
+
+$('body').on('click', "#register", function () {
+    var register_name = $('#register_name').val();
+    var register_email = $('#register_email').val();
+    var register_phone = $('#register_phone').val();
+    var register_password = $('#register_password').val();
+    $.post("user/register",
+        {'register_name':register_name, 'register_email':register_email, 'register_phone':register_phone, 'register_password':register_password},
+    function (response) {
+            $("#registered_msg").html(response);
+            $('#registration_fields')[0].reset();
+            $("#user_email").focus();
+    });
 });

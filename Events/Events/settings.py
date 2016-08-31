@@ -10,6 +10,10 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+CSRF_COOKIE_AGE = None
+
+SESSION_COOKIE_NAME = 'JQESSIONID'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -166,3 +170,4 @@ LOGGING = {
         },
     }
 }
+
