@@ -1,6 +1,7 @@
 # Create your views here.
 from datetime import date
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from models import Events, Cities, User
 
@@ -8,11 +9,11 @@ from models import Events, Cities, User
 def login(request):
     email = request.POST.get('user_email')
     password = request.POST.get('user_password')
-
     try:
-        user = User.objects.get(user_email__exact=email, user_password__exact=password)
-        return HttpResponse(user.user_name)
-    except:
+        user = User.objects.get(user_email=email, user_password=password)
+        request.session['username'] = user.user_name
+        return HttpResponse("add_event_html")
+    except User.DoesNotExist:
         return HttpResponse("Please register!")
 
 
@@ -31,36 +32,53 @@ def register(request):
         return HttpResponse("Successfully registered!<br>Login now")
 
 
+def logout(request):
+    del request.session['username']
+    return HttpResponseRedirect(reverse("eventsapp_home"))
+
+
 # @app.route('/')
-def home(request, username="1"):
-    return render(request, 'layout.html', {'user_name': username})
+def home(request):
+    try:
+        user_is = request.session['username']
+    except KeyError:
+        user_is = "not signed in"
+        request.session['username'] = user_is
+    return render(request, 'layout.html', {'user_name': user_is})
 
 
 # @app.route("/add_event_h")    #Render add_event html
 def add_event_html(request):
     """Add Event HTML page."""
-    return render(request, "add_event.html", {"data": Cities.objects.values("place")})
+    user_is = request.session['username']
+    return render(request, "add_event.html", {"data": Cities.objects.values("place"),
+                                              'user_name': user_is})
 
 
 # @app.route('/add', methods=["POST"])
 
 def add(request):
     """Adding event functionality achieved through ajax call."""
-    data = Cities.objects.values("place")
-    name = request.POST.get('name')
-    date_is = request.POST.get('date')  # variable with name "date" is shadowing inbuilt date()
-    city = request.POST.get('cities')
-    if city:
-        city = city.capitalize()
-    if city == 'Other':
-        city = request.POST.get('other_city').capitalize()
-    info = request.POST['info']
-    if city not in data:
-        city_instance = Cities(place=city)
-        city_instance.save()
-    event_instance = Events(name=name, date=date_is, city_id=city, info=info)
-    event_instance.save()
-    message = "Event added!"
+    user_is = request.session['username']
+    if user_is != "not signed in":
+        data = Cities.objects.values("place")
+        name = request.POST.get('name')
+        date_is = request.POST.get('date')  # variable with name "date" is shadowing inbuilt date()
+        city = request.POST.get('cities')
+        if city:
+            city = city.capitalize()
+        if city == 'Other':
+            city = request.POST.get('other_city').capitalize()
+        info = request.POST.get('info')
+        if city not in data:
+            city_instance = Cities(place=city)
+            city_instance.save()
+        user_obj = User.objects.get(user_name=user_is)
+        event_instance = Events(name=name, date=date_is, city_id=city, info=info, user_id=user_obj.user_email)
+        event_instance.save()
+        message = "Event added!"
+    else:
+        message = "Sign in to add events!"
     return HttpResponse(message)
 
 
@@ -68,11 +86,17 @@ def add(request):
 
 def search_modify_html(request):
     """Render the list of event names in ascending order of date."""
-    return render(request, "search_modify.html", {'events_list': Events.objects.order_by('date')})
+    try:
+        user_is = request.session['username']
+        user_obj = User.objects.get(user_name=user_is)
+        return render(request, "search_modify.html",
+                      {'events_list': Events.objects.filter(user=user_obj.user_email).order_by('date'),
+                       'user_name': user_is})
+    except User.DoesNotExist:
+        return HttpResponseRedirect(reverse("eventsapp_home"))
 
 
 # @app.route('/search', methods=['POST'])
-
 def search(request):
     """Through ajax call: Search Event by id."""
     if request.method == 'POST':
@@ -99,12 +123,15 @@ def update(request):
         upd_city = upd_city.capitalize()
     upd_info = request.POST.get("upd_info")
     event_id = request.POST.get("id")
-
+    event_obj = Events.objects.get(id=event_id)
     if upd_city not in data:
         city_instance = Cities(place=upd_city)
         city_instance.save()
-    event_instance = Events(id=event_id, name=upd_name, date=upd_date, city_id=upd_city, info=upd_info)
-    event_instance.save()
+    event_obj.name = upd_name
+    event_obj.date = upd_date
+    event_obj.info = upd_info
+    event_obj.city_id = upd_city
+    event_obj.save()
     message = "Event Updated!"
     return HttpResponse(message)
 
@@ -121,76 +148,106 @@ def delete(request):
 
 # @app.route("/filter_html")
 def filter_html(request):
-    return render(request, "filters.html")
+    return render(request, "filters.html", {'user_name': request.session['username']})
 
 
 # @app.route("/by_date_html")
 def by_date_html(request):
-    return render(request, "list_by_date.html")
+    return render(request, "list_by_date.html", {'user_name': request.session['username']})
 
 
 def by_date(request):
     if request.method == 'POST':
-        event_instances_list = Events.objects.filter(date=request.POST.get('date'))
-        if event_instances_list:
-            return render(request, 'read.html', {'events': event_instances_list})
-        else:
-            return HttpResponse([])
+        try:
+            user_is = request.session['username']
+            user_obj = User.objects.get(user_name=user_is)
+            event_instances_list = Events.objects.filter(user_id=user_obj.user_email, date=request.POST.get('date'))
+            if event_instances_list:
+                return render(request, 'read.html', {'events': event_instances_list})
+            else:
+                return HttpResponse("No Events")
+        except User.DoesNotExist:
+            return HttpResponse("Please sign in to view events")
 
 
 # @app.route("/by_city_html")
 def by_city_html(request):
     """Through ajax:Get the cities list from Events Table."""
     cities_list = Events.objects.values("city_id").distinct()
-    return render(request, "list_by_city.html", {'data': cities_list})
+    return render(request, "list_by_city.html", {'data': cities_list, 'user_name': request.session['username']})
 
 
 def by_city(request):
     """Through ajax:Search all events with given city in Events Table."""
     if request.method == 'POST':
-        event_instances_list = Events.objects.filter(city=request.POST.get('city')).order_by("-date")
-        if event_instances_list:
-            return render(request, 'read.html', {'events': event_instances_list})
-        else:
-            return HttpResponse([])
+        try:
+            user_is = request.session['username']
+            user_obj = User.objects.get(user_name=user_is)
+            event_instances_list = Events.objects.filter(user_id=user_obj.user_email, city_id=request.POST.get('city'))
+            if event_instances_list:
+                return render(request, 'read.html', {'events': event_instances_list})
+            else:
+                return HttpResponse("No Events")
+        except User.DoesNotExist:
+            return HttpResponse("Please sign in to view events")
 
 
 # @app.route("/by_city_date_html")
 def by_city_date_html(request):
     cities_list = Events.objects.values("city_id").distinct()
-    return render(request, "list_by_city_date.html", {'data': cities_list})
+    return render(request, "list_by_city_date.html", {'data': cities_list, 'user_name': request.session['username']})
 
 
 def by_date_and_city(request):
     """.ajax() call: Search all events with given date and city in Events Table."""
     if request.method == 'POST':
-        events_list = Events.objects.filter(date=request.POST.get('date'), city=request.POST.get('city'))
-        if not events_list:
-            return HttpResponse([])
-        else:
-            return render(request, 'read.html', {'events': events_list})
+        try:
+            user_is = request.session['username']
+            user_obj = User.objects.get(user_name=user_is)
+            events_list = Events.objects.filter(user_id=user_obj.user_email,
+                                                date=request.POST.get('date'), city=request.POST.get('city'))
+            if not events_list:
+                return HttpResponse("No Events")
+            else:
+                return render(request, 'read.html', {'events': events_list})
+        except User.DoesNotExist:
+            return HttpResponse("Please sign in to view events")
 
 
 def up_and_past(request):
     """Get three lists(today, upcoming, past) and renders to specific html."""
-    today_date = str(date.today())
-    today = Events.objects.filter(date=today_date)
-    upcoming = Events.objects.filter(date__gt=today_date).order_by("date")
-    past = Events.objects.filter(date__lt=today_date).order_by('date')
-    return render(request, "result.html", {'today_list': today, 'upcoming_list': upcoming, 'past_list': past})
+    try:
+        user_is = request.session['username']
+        user_obj = User.objects.get(user_name=user_is)
+
+        today_date = str(date.today())
+        today = Events.objects.filter(user_id=user_obj.user_email, date=today_date)
+        upcoming = Events.objects.filter(user_id=user_obj.user_email, date__gt=today_date).order_by("date")
+        past = Events.objects.filter(user_id=user_obj.user_email, date__lt=today_date).order_by('date')
+        if today or upcoming or past:
+            return render(request, "result.html", {'today_list': today, 'upcoming_list': upcoming, 'past_list': past})
+        else:
+            return HttpResponse("No Events")
+    except User.DoesNotExist:
+        return HttpResponse("Please sign in to view events")
 
 
 def by_date_range_html(request):
-    return render(request, "list_by_date_range.html")
+    return render(request, "list_by_date_range.html", {'user_name': request.session['username']})
 
 
 def by_date_range(request):
     """.ajax() call: search all events within the date range."""
     if request.method == 'POST':
-        from_date = request.POST.get('from_date')
-        to_date = request.POST.get('to_date')
-        events_list = Events.objects.filter(date__gte=from_date, date__lte=to_date).order_by("date")
-        if events_list:
-            return render(request, 'read.html', {'events': events_list})
-        else:
-            return HttpResponse([])
+        try:
+            user_is = request.session['username']
+            user_obj = User.objects.get(user_name=user_is)
+            from_date = request.POST.get('from_date')
+            to_date = request.POST.get('to_date')
+            events_list = Events.objects.filter(user_id=user_obj.user_email ,date__gte=from_date, date__lte=to_date).order_by("date")
+            if events_list:
+                return render(request, 'read.html', {'events': events_list})
+            else:
+                return HttpResponse("No Events")
+        except User.DoesNotExist:
+            return HttpResponse("Please sign in to view events")

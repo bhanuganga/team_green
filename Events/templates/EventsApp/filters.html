@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}Filters{% endblock%}
+{% block in_and_out %}
+    {% if user_name == 'not signed in' %}
+        <a href="{% url 'logout' %}" style="display:none" class="button radius">Sign out</a>
+    {% else %}
+        <a href="{% url 'logout' %}" class="button radius">Sign out</a>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
 
 <div id="filters_menu" class="row columns large-12 medium-12 small-12 large-centered ">

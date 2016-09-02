@@ -26,3 +26,6 @@ class User(models.Model):
     user_email = models.EmailField(primary_key=True, blank=False)
     user_phone = models.BigIntegerField(max_length=10, blank=False)
     user_password = models.CharField(max_length=20, blank=False)
+
+    def __unicode__(self):
+        return u'{0}:{1}'.format(self.user_name, self.user_email)

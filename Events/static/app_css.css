@@ -179,3 +179,8 @@ td.td_heading {
 #register_head {
     font-weight: bold;
 }
+
+span#user_tag {
+    font-size: 12px;
+    vertical-align: top;
+}

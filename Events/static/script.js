@@ -1,3 +1,6 @@
+$(document).ready(function () {
+
+
 function getCookie(name) {                                // to get csrf-token
                 var cookieValue = null;
                 if (document.cookie && document.cookie !== '') {
@@ -38,8 +41,14 @@ $("#add_button").click(function() {                     // Onclick add button wi
                     'name':name, 'date':date, 'info':info, 'cities':cities, 'other_city': other_city
                 },
                 success:function (response_data) {
+                    if(response_data == 'Event added!'){
                     alert(response_data);
                     $('#add_form')[0].reset();
+                    }
+                    else{
+                        window.location.replace("/");
+                        alert(response_data);
+                    }
                 },
                 error:function () {
                     alert("Something wrong")
@@ -55,7 +64,7 @@ $("#add_button").click(function() {                     // Onclick add button wi
     });
 
 $("#other_city").hide();
-$("#cities").change(function(){          //#TODO task 1--DONE
+$("#cities").change(function(){
  var new_city=$('#other_city');
  if($("#cities").val()!="Other")
    new_city.hide();
@@ -80,7 +89,7 @@ $("#search_button").click(function() {                             //search_scri
 
 // For elements(forms|btn|any_tag|result of ajax call ) populated as a result of an action normal onclick doesn't work,
 // use following syntax: $('body').on('click', '#selector", handler|handler(){});
-$('body').on('click', "#update_btn", function() {      //# TODO task 2--DONE update_script
+$('body').on('click', "#update_btn", function() {
     var event_id = $("#event_id").val();
     var upd_name = $("#upd_name").val();
     var upd_date = $("#upd_date").val();
@@ -101,15 +110,16 @@ $('body').on('click', "#update_btn", function() {      //# TODO task 2--DONE upd
     else{
         alert("One or more fields invalid");
     }
+
 });
 
 
-$('body').on("click","#delete_btn", function() {      //# TODO task 3--DONE delete_script
+$('body').on("click","#delete_btn", function() {
         var event_id = $('#event_id').val();
         $.post("api/delete",
             {'id':event_id},
         function (response) {
-            location.reload();
+            window.location.reload();
             alert(response);
 
         });
@@ -118,7 +128,7 @@ $('body').on("click","#delete_btn", function() {      //# TODO task 3--DONE dele
 
 
 
-$("#by_date_btn").click(function(){                  //# TODO task 4--DONE by_date_script
+$("#by_date_btn").click(function(){
     var date=$('#date1').val();
     var message_div = $("#message");
 
@@ -129,9 +139,8 @@ $("#by_date_btn").click(function(){                  //# TODO task 4--DONE by_da
             url: "api/by_date",
             data: {'date': date},
             success: function (response) {
-                if (response == []) {
-                    location.reload();
-                    alert("No events on selected date!");
+                if (response == "No Events" || "Please sign in to view events") {
+                    message_div.addClass("large-2").html(response);
                     }
                 else {
                     message_div.html(response);
@@ -151,7 +160,7 @@ $("#by_date_btn").click(function(){                  //# TODO task 4--DONE by_da
 });
 
 
-$("#by_city_btn").click(function(){              //#TODO task 5--DONE by_city_script
+$("#by_city_btn").click(function(){
     var city=$('#city').val();
     var message_div = $("#message");
     $.ajax({
@@ -159,14 +168,10 @@ $("#by_city_btn").click(function(){              //#TODO task 5--DONE by_city_sc
         url: "api/by_city",
         data: {'city': city},
         success: function (data) {
-            if (data == []) {
-                alert("No events in selected city");
-                location.reload();
-            }
-            else {
+
                 message_div.html(data);
                 message_div.slideDown();
-            }
+
         },
             error:function () {
                 alert("Something wrong")
@@ -175,7 +180,7 @@ $("#by_city_btn").click(function(){              //#TODO task 5--DONE by_city_sc
 });
 
 
-$("#date_city_btn").click(function(){               //# TODO task 6--DONE date_city_script
+$("#date_city_btn").click(function(){
     var date=$('#date_in_date_city').val();
     var city=$('#city_in_date_city').val();
     if( date != "") {
@@ -184,13 +189,9 @@ $("#date_city_btn").click(function(){               //# TODO task 6--DONE date_c
         url: "api/by_date_and_city",
         data: {'date': date, 'city': city},
         success: function (data) {
-            if (data == []) {
-                alert("Please try another choice");
-                location.reload();
-            }
-            else {
+
                 $("#message").html(data).slideDown();
-            }
+
         },
         error: function () {
             alert("Something wrong")
@@ -205,7 +206,7 @@ $("#date_city_btn").click(function(){               //# TODO task 6--DONE date_c
 });
 
 
-$("#by_date_range_btn").click(function(){            //# TODO task 7--DONE date_range_script
+$("#by_date_range_btn").click(function(){
     var from_date = $('#from_date').val();
     var to_date = $('#to_date').val();
     var message_div = $("#message");
@@ -215,15 +216,10 @@ $("#by_date_range_btn").click(function(){            //# TODO task 7--DONE date_
            url: "api/by_date_range",
            data: {'from_date': from_date, 'to_date': to_date},
            success: function (data) {
-               if (data == []) {
-                   location.reload();
-                   alert("No Events found");
 
-               }
-               else {
                    message_div.html(data);
                    message_div.slideDown();
-               }
+
            },
            error: function () {
                alert("Something wrong");
@@ -261,13 +257,22 @@ switch (current_url_path) {
 }
 
 $('body').on('click', '#sign_in',function () {
-    var user_email = $("#user_email");
-    var user_password = $("#user_pwd");
-    $.ajax({url:"user/login",
+    var user_email = $("#user_email").val();
+    var user_password = $("#user_pwd").val();
+    $.ajax({type:"POST",
+        url:"user/login",
         data:{"user_email":user_email, "user_password":user_password},
-    success:function (response) {
-        $.get("/", {'user_name':response});
-    }
+        dataType:'html',
+        success:function (data) {
+            if (data == "Please register!") {
+                alert(data);
+            } else {
+                window.location.replace(data);
+            }
+        },
+        error: function () {
+                alert("something wrong");
+        }
     });
 });
 
@@ -279,8 +284,11 @@ $('body').on('click', "#register", function () {
     $.post("user/register",
         {'register_name':register_name, 'register_email':register_email, 'register_phone':register_phone, 'register_password':register_password},
     function (response) {
-            $("#registered_msg").html(response);
+            $("#registered_msg").html(response).show();
+            setTimeout(function() { $("#registered_msg").hide(); }, 5000);
             $('#registration_fields')[0].reset();
             $("#user_email").focus();
     });
+});
+
 });
