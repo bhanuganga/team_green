@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <form action="/logged_in" method="POST">
+        <div class="section row">
+            <div class="columns large-4 small-5">
+                <input type="text" name="username" value="" id="username" placeholder="Name"/>
+            </div>
+
+            <div class="columns large-4 small-5">
+                <input type="password" name="password" value="" id="password" placeholder="Password"/>
+            </div>
+
+            <div class="columns large-2 small-2 end " style="padding-top: 25px">
+                <input onclick="login()" type="button" class="button postfix" value="submit" />
+            </div>
+        </div>
+    </form>
+
+<div id="message"></div>
+<div id="onsuccess"></div>
+
+<script src="/static/script.js"></script>
+
+{% endblock %}

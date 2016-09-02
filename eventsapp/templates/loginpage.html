@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block title %}Login{% endblock %}
+{% block body %}
+
+    <div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+
+        <div class="row">
+            <div id="heading">
+                Welcome to <span>Event App </span>!
+            </div>
+            <div id="subHeading">
+                Login or Register Now
+            </div>
+        </div>
+            <div class="row" id="details">
+                <div class="large-6 medium-6 small-12 columns" id="login_form">
+                    <div class="form_heading">Log In With<span>(Existing Users)</span></div>
+                        <a href="#" class="button"  style="color: white; background-color: darkblue; width: 155px; height: 35px; padding-top: 10px;">facebook</a>
+                        <a href="#" class="button"  style="color: white; background-color: #E31E24; width: 155px; height: 35px; padding-top: 10px; ">google</a>
+                    <div><hr></div>
+                    <div class="form_heading">Log In <span>(Existing Users)</span></div>
+                <form method="POST">
+                    <div><input type="text" name="username" value="" id="login_username" placeholder="Name"/></div>
+                    <div><input type="password" name="password" value="" id="login_password" placeholder="Password"/></div>
+                    <ul class="button-group">
+                        <li><a href="/forgot_password">Forgot Password ?</a> </li>
+                        <li class="right">
+                            <div><input onclick="login()" type="button" class="button postfix" value="LOG IN" style="background-color: #E31E24; width: 150px" /></div>
+                        </li>
+                    </ul>
+                </form>
+                </div>
+
+                <div class="large-6 medium-6 small-12 columns" id="register_form">
+                    <div class="form_heading">Register <span>(New Users)</span></div>
+                <form method="POST">
+                    <div><input type="text" name="username" value="" id="username" placeholder="Name"/>
+                    </div>
+                    <div><input type="text" name="email_id" value="" id="email_id" placeholder="Email address"/></div>
+                    <div><input type="text" name="ph_no" value="" id="ph_no" required pattern="^\d{11}$" placeholder="Phone Number"/></div>
+                    <div><input type="password" name="password" value="" id="password" placeholder="Password"/></div>
+                    <div><input type="checkbox"><label style="margin-left:-5px;font-size: small">&nbsp;&nbsp;Subscribe for offers and newsletter</label></div>
+                    <div class="right"><input onclick="signup()" type="button" class="button postfix" value="CREATE ACCOUNT" style="background-color: #E31E24; width: 150px"/></div>
+                </form>
+                </div>
+
+            </div>
+
+            <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+
+<div id="message"></div>
+<div id="onsuccess"></div>
+
+
+    </div>
+
+
+
+<script src="/static/app_css.css"></script>
+<script src="/static/script.js"></script>
+{% endblock %}
