@@ -2,7 +2,7 @@
 {% block title %}Filters{% endblock%}
 {% block in_and_out %}
     {% if user_name == 'not signed in' %}
-        <a href="{% url 'logout' %}" style="display:none" class="button radius">Sign out</a>
+        <a href="{% url 'logout' %}" id="sign_out_in_filter" style="display:none" class="button radius">Sign out</a>
     {% else %}
         <a href="{% url 'logout' %}" class="button radius">Sign out</a>
     {% endif %}

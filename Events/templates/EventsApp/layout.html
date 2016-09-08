@@ -16,51 +16,9 @@
          {% if user_name == 'not signed in'%}
          <a data-reveal-id="test_modal" id="in_page_login" class="radius button">Sign In</a>
          {% else  %}
-             <a data-reveal-id="test_modal" style="display: none" id="in_page_login" class="radius button">Sign In</a>
+             <a href="{% url 'logout' %}" class="button radius">Sign out</a>
          {%  endif %}
 
-     <div class="reveal-modal-bg" style="display: none;"></div>
-        <div id="test_modal" class="reveal-modal xlarge open" data-reveal data-options="close_on_background_click:false;">
-            <div class="row" data-equalizer>
-                <div id="modal_heading">SignIn/Register Now</div>
-                <div id="login_left" class="columns large-6 small-12 medium-6 panel" data-equalizer-watch>
-
-                            <div id="social_head">Social Connect</div>
-                            <ul class="inline-list">
-                                <li>
-                                    <a id="fb_connect"></a>
-                                </li>
-                                <li>
-                                    <a id="gplus_connect"></a>
-                                </li>
-                            </ul>
-                            <div class="columns large-10 large-centered">
-                                <div id="form_separator"></div>
-                            </div>
-                            <div id="login_head" >Login<span id="login_span">(existing users)</span></div>
-                    <form id="login_fields" data-abide>
-                            <input type="text" id="user_email" placeholder="Email" pattern="abc">
-                            <small class="error">Invalid</small>
-                            <input type="password" id="user_pwd" placeholder="Password">
-
-                            <a href="#">Forgot password?</a>
-                            <div class="button right modal_btn" id="sign_in">Sign In</div>
-                    </form>
-                </div>
-                <div class="columns large-6 medium-6 small-12 panel" data-equalizer-watch>
-                    <form id="registration_fields">
-                        <div id="register_head">Register Here</div>
-                        <input type="text" id="register_name" placeholder="Name">
-                        <input type="email" id="register_email" placeholder="Email">
-                        <input type="tel" id="register_phone" placeholder="Phone number">
-                        <input type="password" id="register_password" placeholder="Password">
-                        <div class="button right modal_btn" id="register" >Register</div>
-                    </form>
-                    <div id="registered_msg"></div>
-                </div>
-            </div>
-        <a class="close-reveal-modal" aria-label="Close">x</a>
-        </div>
      {% endblock %}
   <ul class="header-subnav">
     <li ><a href="/" id="header-about">ABOUT</a></li>
@@ -87,16 +45,56 @@
             </li>
         </ol>
 
-
-
-
-
     {% endblock %}
 </div>
 
 {% block footer %}
 <footer>
+<div id="test_modal" class="reveal-modal xlarge" data-reveal data-options="close_on_background_click:false;">
+    <div class="row" data-equalizer>
+        <div id="modal_heading">SignIn/Register Now</div>
+        <div id="login_left" class="columns large-6 small-12 medium-12 panel" data-equalizer-watch>
 
+            <div id="social_head">Social Connect</div>
+            <ul class="inline-list">
+                <li>
+                    <a id="fb_connect"></a>
+                </li>
+                <li>
+                    <a id="gplus_connect"></a>
+                </li>
+            </ul>
+            <div class="columns large-10 large-centered">
+                <div id="form_separator"></div>
+            </div>
+            <div id="login_head" >Login<span id="login_span">(existing users)</span></div>
+            <form id="login_fields" data-abide="ajax">
+                <input type="email" id="user_email" placeholder="Email" required pattern="[a-zA-Z]{2,5}">
+                <small class="error">Invalid Email</small>
+                <input type="password" id="user_pwd" placeholder="Password" required pattern="[a-zA-Z]{2,5}">
+                <small class="error">Invalid password</small>
+                <a href="#">Forgot password?</a>
+                <button type="submit" class="button right modal_btn" id="sign_in" >Sign In</button>
+            </form>
+        </div>
+        <div class="columns large-6 medium-12 small-12 panel" data-equalizer-watch>
+            <form id="registration_fields" data-abide="ajax">
+                <div id="register_head">Register Here</div>
+                <input type="text" id="register_name" placeholder="Name" required>
+                <small class="error">name required</small>
+                <input type="email" id="register_email" placeholder="Email" required>
+                <small class="error">email required</small>
+                <input type="tel" id="register_phone" placeholder="Phone number" required>
+                <small class="error">phone number required</small>
+                <input type="password" id="register_password" placeholder="Password" required>
+                <small class="error">password required</small>
+                <button type=submit class="button right modal_btn" id="register">Register</button>
+            </form>
+            <div id="registered_msg"></div>
+        </div>
+    </div>
+        <a class="close-reveal-modal" aria-label="Close" onclick=window.location.reload()>x</a>
+</div>
         Copyright @ TeamGreen. All Rights Reserved
 
 </footer>
@@ -107,6 +105,6 @@
 <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
 <script>
     $(document).foundation();
-  </script>
+</script>
 </body>
 

@@ -46,8 +46,7 @@ $("#add_button").click(function() {                     // Onclick add button wi
                     $('#add_form')[0].reset();
                     }
                     else{
-                        window.location.replace("/");
-                        alert(response_data);
+                        $('#test_modal').foundation('reveal', 'open');
                     }
                 },
                 error:function () {
@@ -139,9 +138,12 @@ $("#by_date_btn").click(function(){
             url: "api/by_date",
             data: {'date': date},
             success: function (response) {
-                if (response == "No Events" || "Please sign in to view events") {
+                if (response == "No Events") {
                     message_div.addClass("large-2").html(response);
                     }
+                else if(response == "Please sign in to view events"){
+                    $('#test_modal').foundation('reveal', 'open');
+                }
                 else {
                     message_div.html(response);
                     message_div.slideDown();
@@ -168,10 +170,13 @@ $("#by_city_btn").click(function(){
         url: "api/by_city",
         data: {'city': city},
         success: function (data) {
-
+            if(data == "Please sign in"){
+              $('#test_modal').foundation('reveal', 'open');
+            }
+            else{
                 message_div.html(data);
                 message_div.slideDown();
-
+            }
         },
             error:function () {
                 alert("Something wrong")
@@ -189,9 +194,12 @@ $("#date_city_btn").click(function(){
         url: "api/by_date_and_city",
         data: {'date': date, 'city': city},
         success: function (data) {
-
+            if(data == "Please sign in to view events"){
+              $('#test_modal').foundation('reveal', 'open');
+            }
+            else {
                 $("#message").html(data).slideDown();
-
+            }
         },
         error: function () {
             alert("Something wrong")
@@ -216,10 +224,13 @@ $("#by_date_range_btn").click(function(){
            url: "api/by_date_range",
            data: {'from_date': from_date, 'to_date': to_date},
            success: function (data) {
-
-                   message_div.html(data);
-                   message_div.slideDown();
-
+                if(data == "Please sign in to view events"){
+                    $('#test_modal').foundation('reveal', 'open');
+                }
+                else {
+                    message_div.html(data);
+                    message_div.slideDown();
+                }
            },
            error: function () {
                alert("Something wrong");
@@ -233,8 +244,8 @@ $("#by_date_range_btn").click(function(){
     }
 });
 
-var current_url_path = $(location).attr('pathname');
-switch (current_url_path) {
+window.current_url_path = $(location).attr('pathname');
+switch (window.current_url_path) {
     case "/":
         $('#header-about').addClass("is-active");
         break;
@@ -256,27 +267,29 @@ switch (current_url_path) {
 
 }
 
-$('body').on('click', '#sign_in',function () {
+$('#login_fields').on('valid.fndtn.abide',function () {
     var user_email = $("#user_email").val();
     var user_password = $("#user_pwd").val();
     $.ajax({type:"POST",
         url:"user/login",
-        data:{"user_email":user_email, "user_password":user_password},
+        data:{"user_email":user_email, "user_password":user_password, "path":window.current_url_path},
         dataType:'html',
         success:function (data) {
             if (data == "Please register!") {
-                alert(data);
+                $("#registered_msg").html(data).show();
+                setTimeout(function() { $("#registered_msg").hide(); }, 10000);
             } else {
-                window.location.replace(data);
+                location.reload();
             }
         },
         error: function () {
                 alert("something wrong");
         }
     });
+    $("#login_fields")[0].reset();
 });
 
-$('body').on('click', "#register", function () {
+$('#registration_fields').on('valid.fndtn.abide', function () {
     var register_name = $('#register_name').val();
     var register_email = $('#register_email').val();
     var register_phone = $('#register_phone').val();
@@ -285,7 +298,7 @@ $('body').on('click', "#register", function () {
         {'register_name':register_name, 'register_email':register_email, 'register_phone':register_phone, 'register_password':register_password},
     function (response) {
             $("#registered_msg").html(response).show();
-            setTimeout(function() { $("#registered_msg").hide(); }, 5000);
+            setTimeout(function() { $("#registered_msg").hide(); }, 10000);
             $('#registration_fields')[0].reset();
             $("#user_email").focus();
     });

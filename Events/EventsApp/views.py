@@ -12,9 +12,16 @@ def login(request):
     try:
         user = User.objects.get(user_email=email, user_password=password)
         request.session['username'] = user.user_name
-        return HttpResponse("add_event_html")
+        request.session['useremail'] = user.user_email
+        return HttpResponse("success")
     except User.DoesNotExist:
         return HttpResponse("Please register!")
+
+
+def logout(request):
+    del request.session['username']
+    del request.session['useremail']
+    return HttpResponseRedirect(reverse("eventsapp_home"))
 
 
 def register(request):
@@ -26,24 +33,21 @@ def register(request):
     try:
         user = User.objects.get(user_email=register_email)
         return HttpResponse("Already registered!<br> Please login")
-    except:
+    except User.DoesNotExist:
         user_instance = User(register_name, register_email, register_phone, register_password)
         user_instance.save()
         return HttpResponse("Successfully registered!<br>Login now")
-
-
-def logout(request):
-    del request.session['username']
-    return HttpResponseRedirect(reverse("eventsapp_home"))
 
 
 # @app.route('/')
 def home(request):
     try:
         user_is = request.session['username']
+
     except KeyError:
         user_is = "not signed in"
         request.session['username'] = user_is
+        request.session['useremail'] = user_is
     return render(request, 'layout.html', {'user_name': user_is})
 
 
@@ -73,7 +77,7 @@ def add(request):
         if city not in data:
             city_instance = Cities(place=city)
             city_instance.save()
-        user_obj = User.objects.get(user_name=user_is)
+        user_obj = User.objects.get(user_email=request.session['useremail'])
         event_instance = Events(name=name, date=date_is, city_id=city, info=info, user_id=user_obj.user_email)
         event_instance.save()
         message = "Event added!"
@@ -88,11 +92,11 @@ def search_modify_html(request):
     """Render the list of event names in ascending order of date."""
     try:
         user_is = request.session['username']
-        user_obj = User.objects.get(user_name=user_is)
+        user_obj = User.objects.get(user_email=request.session['useremail'])
         return render(request, "search_modify.html",
                       {'events_list': Events.objects.filter(user=user_obj.user_email).order_by('date'),
                        'user_name': user_is})
-    except User.DoesNotExist:
+    except User.DoesNotExist, KeyError:
         return HttpResponseRedirect(reverse("eventsapp_home"))
 
 
@@ -182,14 +186,14 @@ def by_city(request):
     if request.method == 'POST':
         try:
             user_is = request.session['username']
-            user_obj = User.objects.get(user_name=user_is)
+            user_obj = User.objects.get(user_name__exact=user_is)
             event_instances_list = Events.objects.filter(user_id=user_obj.user_email, city_id=request.POST.get('city'))
             if event_instances_list:
                 return render(request, 'read.html', {'events': event_instances_list})
             else:
                 return HttpResponse("No Events")
-        except User.DoesNotExist:
-            return HttpResponse("Please sign in to view events")
+        except User.DoesNotExist, KeyError:
+            return HttpResponse("Please sign in")
 
 
 # @app.route("/by_city_date_html")
@@ -229,7 +233,7 @@ def up_and_past(request):
         else:
             return HttpResponse("No Events")
     except User.DoesNotExist:
-        return HttpResponse("Please sign in to view events")
+        return HttpResponseRedirect(reverse('eventsapp_home'))
 
 
 def by_date_range_html(request):
@@ -244,7 +248,7 @@ def by_date_range(request):
             user_obj = User.objects.get(user_name=user_is)
             from_date = request.POST.get('from_date')
             to_date = request.POST.get('to_date')
-            events_list = Events.objects.filter(user_id=user_obj.user_email ,date__gte=from_date, date__lte=to_date).order_by("date")
+            events_list = Events.objects.filter(user_id=user_obj.user_email, date__gte=from_date, date__lte=to_date).order_by("date")
             if events_list:
                 return render(request, 'read.html', {'events': events_list})
             else:
