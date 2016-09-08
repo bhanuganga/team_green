@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}<head>
+    <meta charset="UTF-8">
+    <title>{%block title%}Events{% endblock%}</title>
+    <link rel="stylesheet" href="/static/foundation.css">
+    <link rel="stylesheet" href="/static/foundation.min.css">
+    <link rel="stylesheet" href="/static/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/static/app_css.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head>{% endblock %}
+<body>
+
+<div class="image">
+    <img src="/static/event_hands.png" alt="events">
+    <div id="textonimage" class="columns large-12 large-centered small-centered small-12 medium-centered medium-12">
+        <h1 style="margin-bottom: 1px"><b>EVENTIFY</b></h1>
+        <small id="login_name">{{ user }}</small>
+    </div>
+    <div class="button-group large-centered small-centered small-12 medium-centered medium-12">
+        <a class="button" id="mysite" href="/">My Site</a>
+        <a class="button" id="mysite1" href="add_event_html">Add event</a>
+        <a class="button" id="mysite2" href="search_html"> {% if user == '' %} Search/Modify{% else %} MyEvents{% endif %}</a>
+        <a class="button" id="mysite3" href="filters_html">Filters</a>
+    </div>
+    <div id="login_logout" class="button-group columns large-centered small-centered small-2 medium-centered medium-2 " >
+
+        <a class="button" id="loginbutton" data-reveal-id="signin" {% if user == '' %} style="display: block" {% else %} style="display: none"  {% endif %}>Login</a>
+        <a class="button" id="logoutbutton" {% if user == '' %} style="display: none" {% else %} style="display: block"  {% endif %} href="logout">Logout</a>
+
+    </div>
+</div>
+<div id="signin" class="reveal-modal xxlarge" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog" data-options="close_on_background_click:false;">
+  <h2 id="modalTitle">Welcome to <span>Eventify</span>!</h2>
+  <p class="lead">Login or Register Now</p>
+  <div class="row">
+      <div class="columns large-6 medium-6 small-12">
+          <div><h3>Log In with</h3></div>
+          <div class=" columns large-6 medium-6 small-6 left">
+              <a href="#"><img src="/static/fbconnect.png" style="height: 40px; "></a>
+          </div>
+          <div class=" columns small-6 large-6 medium-6 left">
+              <a href="#"><img src="/static/g+connect.png" style="height: 40px; "></a>
+          </div>
+          <div style="border-bottom: dotted 1px;padding: 5px;margin-top: 60px;height: 10px" > </div>
+
+          <div><h3>Log In<small>(Existing Users)</small></h3></div>
+          <form data-abide class="loginDetailsForm">{% csrf_token %}
+               <div class="email-field">
+                   <input class="loginFormInput" type="email"
+                          pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z-.]+$"
+                          required id="emailaddress"
+                          placeholder="Email Address"/>
+                   <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">An email address is required.</small>
+               </div>
+              <div class="password-field">
+                  <input class="loginFormInput" type="password" required
+                         pattern="^.{1,20}$" id="password_login"
+                         placeholder="Password"/>
+                  <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Passwords must have 1 to 20 characters.</small>
+              </div>
+          </form>
+          <div class="columns small-4 large-4 medium-4 right">
+              <input type="button" class="alert button" value="LOG IN" onclick="login()">
+          </div>
+      </div>
+      <div class="columns small-12 large-6 medium-6">
+          <div><h3>Register <small>(New Users)</small></h3></div>
+          <form data-abide class="registerDetails" autocomplete="off">{% csrf_token %}
+              <div class="name-field">
+                  <input class="registerFormInput" id="username" type="text" required
+                         pattern="[a-zA-Z]+" placeholder="Name"/>
+                  <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Name is required and must be a string.</small>
+              </div>
+              <div class="email-field">
+                  <input class="registerFormInput" id="email" required
+                         pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z-.]+$"
+                         type="email"
+                         placeholder="Email Address" />
+                  <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">An email address is required.</small>
+              </div>
+              <div class="custom">
+                  <input class="registerFormInput" id="mobile" type="text"
+                         required pattern="^\d{10}$" data-invalid
+                         placeholder="Phone Number"/>
+                  <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Please enter a valid phone number.</small>
+              </div>
+              <div class="password-field">
+                  <input class="registerFormInput" id="password" type="password"
+                         required pattern="^.{8,20}$"
+                         placeholder="Choose Password"/>
+                  <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Passwords must have 8 to 20 characters.</small>
+              </div>
+              <div class="custom" style="margin-top:20px">
+
+                  <div id="accountmsg" class="row columns large-centered"></div>
+                  <div id="accounterror" ></div>
+              </div>
+                </form>
+              <div class="large-4 medium-6 small-6 right">
+                  <input type="button" class="alert button" onclick="account()" value="Create Account">
+              </div>
+
+
+        </div>
+  </div>
+
+  <a class="close-reveal-modal closesymbol" aria-label="Close" onclick="refreshforms();">&#215;</a>
+</div>
+
+<!--  body here -->
+    <div id="content">
+        {% block body %}<br>
+
+           <h6 style="text-align: center"><b>Eventify</b> helps you to find out the events going on around the globe and you can also <strong>create your own </strong>event.</h6>
+
+        {% endblock %}
+    </div>
+
+{% block footer %}
+<footer>
+
+        Copyright @ TeamGreen. All Rights Reserved
+
+</footer>
+{% endblock  %}
+<script type="text/javascript" src="/static/js/foundation.min.js"></script>
+<script type="text/javascript" src="/static/js/foundation/foundation.js"></script>
+<script type="text/javascript" src="/static/js/foundation/foundation.abide.js"></script>
+<script type="text/javascript" src="/static/js/foundation/foundation.reveal.js"></script>
+<script type="text/javascript" src="/static/js/vendor/modernizr.js"></script>
+<script src="/static/script.js"></script>
+<script>
+   $(document).ready(function() {
+     $(document).foundation();
+   })
+</script>
+
+</body>
+</html>
