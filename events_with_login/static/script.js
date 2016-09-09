@@ -62,25 +62,12 @@ function account(){
             url: "/createaccount",
             data: {'username': username, 'email': email, 'mobile': mobile, 'password': password},
             success: function (response_data) {
-                if (response_data=='Sucessfully Created') {
-                    //noinspection JSDuplicatedDeclaration
-                    var alertBox = '<div data-alert class="alert-box success">Sucessfully Created!  <a href="#" class="close">&times;</a></div>';
-                    $("#accountmsg").empty().append(alertBox).foundation();
-                    $('.registerDetails')[0].reset();
-                }
-                else{
-                    //noinspection JSDuplicatedDeclaration
-                    var alertBox = '<div data-alert class="alert-box warning">Already registered continue by Login !  <a href="#" class="close">&times;</a></div>';
-                    $("#accountmsg").empty().append(alertBox).foundation();
-                    $('.registerDetails')[0].reset();
-                }
+                $('#signin').foundation('reveal', 'open');
+                $("#accountmsg").html(response_data).fadeOut(5000);
+                refreshforms();
             },
             error: function () {
-                var alertBox = '<div data-alert class="alert-box">Something wrong! <a href="#" class="close">&times;</a></div>';
-                $("#accounterror").empty().append(alertBox).foundation().fadeOut(5000);
-                setTimeout(function () {
-                    location.reload();
-                }, 2500);
+                $("#accounterror").html('Something went wrong').fadeOut(5000);
             }
         });
     }
@@ -99,16 +86,17 @@ function login() {
                 if(response_data=='logged in') {
                     refreshforms();
                     callback();
+                    window.location.reload();
                 }
                 else if(response_data !="Please Register"){
                     //noinspection JSDuplicatedDeclaration
                     var alertBox = '<div data-alert class="alert-box warning">Your username and password doesnot match! <a href="#" class="close">&times;</a></div>';
-                $("#accounterror").empty().append(alertBox).foundation();
+                $("#accounterror").empty().append(alertBox).foundation().fadeOut(5000);
 
                 }
                 else {
                      var alertBox = '<div data-alert class="alert-box warning">Please Register! <a href="#" class="close">&times;</a></div>';
-                    $("#accounterror").empty().append(alertBox).foundation();
+                    $("#accounterror").empty().append(alertBox).foundation().fadeOut(5000);
                 }
             }
         });
@@ -141,8 +129,7 @@ function add() {
             success:function (response_data) {
 
                 if(response_data=='Event added!') {
-                    var alertBox = '<div data-alert class="alert-box success">EVENT ADDED  <a href="#" class="close">&times;</a></div>';
-                    $("#success").empty().append(alertBox).foundation().fadeOut(5000);
+                    $("#success").html(response_data).fadeOut(5000);
                     $('#add_form')[0].reset();
                 }
                 else{
@@ -184,8 +171,7 @@ function search() {
         success:function (data) {
             if (data == "please select a name from list!") {
                 $('#search_result').slideUp();
-                var alertBox = '<div data-alert class="alert-box"><h6>Please select a name from list! </h6><a href="#" class="close">&times;</a></div>';
-                $("#error").empty().append(alertBox).foundation().fadeOut(5000);
+                $("#error").html(data).fadeOut(5000);
             }
             else {
                 $('#search_result').html(data).slideDown();
@@ -195,7 +181,7 @@ function search() {
 }
 
 
-function update() {
+function update_event() {
     var event_id = $('#event_id').val();
     var upd_name = $('#upd_name').val();
     var upd_date = $('#upd_date').val();
@@ -210,20 +196,14 @@ function update() {
             {'id': event_id,'email':email, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':city, 'upd_info':upd_info},
             function (response) {
                 if(response=='EVENT UPDATED') {
-                    //noinspection JSDuplicatedDeclaration
-
-                    var alertBox = '<div data-alert class="alert-box success">EVENT UPDATED  <a href="#" class="close">&times;</a></div>';
-                    $("#success").empty().append(alertBox).foundation();
+                    $("#success").html(response);
                     setTimeout(function () {
                         location.reload();
-                    }, 1500);
+                    }, 2500);
                 }
                 else{
-                     callback=update();
+                     callback=update_event();
                      $('#signin').foundation('reveal', 'open');
-
-
-
                 }
             });
     }
@@ -234,40 +214,25 @@ function update() {
 }
 
 
-function del() {
+function delete_event() {
     var event_id = $('#event_id').val();
     ajaxsetup();
     $.post("/delete",
         {'id':event_id},
         function (response) {
             if(response=='EVENT DELETED') {
-                //noinspection JSDuplicatedDeclaration
-
-                var alertBox = '<div data-alert class="alert-box success">EVENT DELETED  <a href="#" class="close">&times;</a></div>';
-                $("#success").empty().append(alertBox).foundation();
-                $('#search_result').slideUp('fast');
+                $("#success").html(response);
                 setTimeout(function () {
                     location.reload();
                 }, 1500);
             }
             else {
-                callback=del();
+                callback=delete_event();
                 $('#signin').foundation('reveal', 'open');
 
 
           }
         });
-}
-
-function setSelectedIndex(s, v) {
-    for (var i = 0; i < s.options.length; i++) {
-        if (s.options[i].text == v) {
-            s.options[i].selected = true;
-            return;
-
-        }
-
-    }
 }
 
 function bydate(){
