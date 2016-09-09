@@ -11,12 +11,12 @@
 </head>{% endblock %}
 <body>{%csrf_token%}
  <header class="header">
-  {% block name %}<h1 class="headline">EventsApp<span id="user_tag"> {{ user_name }}</span></h1>{% endblock %}
+  {% block name %}<h1 class="headline">EventsApp<span id="user_tag">{{ user_name }}</span></h1>{% endblock %}
      {% block in_and_out %}
          {% if user_name == 'not signed in'%}
          <a data-reveal-id="test_modal" id="in_page_login" class="radius button">Sign In</a>
          {% else  %}
-             <a href="{% url 'logout' %}" class="button radius">Sign out</a>
+             <a href="{% url 'logout' %}" id="logout_btn" class="button radius">Sign out</a>
          {%  endif %}
 
      {% endblock %}

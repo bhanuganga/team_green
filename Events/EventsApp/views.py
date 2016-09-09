@@ -13,7 +13,7 @@ def login(request):
         user = User.objects.get(user_email=email, user_password=password)
         request.session['username'] = user.user_name
         request.session['useremail'] = user.user_email
-        return HttpResponse("success")
+        return HttpResponse(request.session['username'])
     except User.DoesNotExist:
         return HttpResponse("Please register!")
 
@@ -127,7 +127,7 @@ def update(request):
         upd_city = upd_city.capitalize()
     upd_info = request.POST.get("upd_info")
     event_id = request.POST.get("id")
-    event_obj = Events.objects.get(id=event_id)
+    event_obj = Events.objects.get(id=event_id, user_id=request.session['useremail'])
     if upd_city not in data:
         city_instance = Cities(place=upd_city)
         city_instance.save()
@@ -145,7 +145,7 @@ def update(request):
 def delete(request):
     """Gets the event object by id & deletes it."""
     eid = request.POST["id"]
-    event_instance = Events.objects.get(id=eid)
+    event_instance = Events.objects.get(id=eid, user_id=request.session['useremail'])
     event_instance.delete()
     return HttpResponse("Event Deleted")
 
@@ -229,7 +229,8 @@ def up_and_past(request):
         upcoming = Events.objects.filter(user_id=user_obj.user_email, date__gt=today_date).order_by("date")
         past = Events.objects.filter(user_id=user_obj.user_email, date__lt=today_date).order_by('date')
         if today or upcoming or past:
-            return render(request, "result.html", {'today_list': today, 'upcoming_list': upcoming, 'past_list': past})
+            return render(request, "result.html", {'today_list': today, 'upcoming_list': upcoming, 'past_list': past,
+                                                   'user_name': user_is})
         else:
             return HttpResponse("No Events")
     except User.DoesNotExist:
@@ -248,7 +249,8 @@ def by_date_range(request):
             user_obj = User.objects.get(user_name=user_is)
             from_date = request.POST.get('from_date')
             to_date = request.POST.get('to_date')
-            events_list = Events.objects.filter(user_id=user_obj.user_email, date__gte=from_date, date__lte=to_date).order_by("date")
+            events_list = Events.objects.filter(user_id=user_obj.user_email,
+                                                date__gte=from_date, date__lte=to_date).order_by("date")
             if events_list:
                 return render(request, 'read.html', {'events': events_list})
             else:

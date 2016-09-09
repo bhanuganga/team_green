@@ -279,14 +279,37 @@ $('#login_fields').on('valid.fndtn.abide',function () {
                 $("#registered_msg").html(data).show();
                 setTimeout(function() { $("#registered_msg").hide(); }, 10000);
             } else {
-                location.reload();
+                $("#test_modal").foundation('reveal','close');
+
+                switch(window.current_url_path ){
+                    case "/":location.reload();break;
+
+                    case "/add_event_html":
+                        $("#add_button").trigger('click');
+                        break;
+                    case "/search_modify_html":
+                        $("#search_button").trigger('click');
+                        break;
+                    case "/by_date_html":
+                        $("#by_date_btn").trigger('click');
+                        break;
+                    case "/by_city_html":
+                        $("#by_city_btn").trigger('click');
+                        break;
+                    case "/by_city_date_html":
+                        $("#date_city_btn").trigger('click');
+                        break;
+                    case "/by_date_range_html":
+                        $("#by_date_range_btn").trigger('click');break;
+                }
+                $("#user_tag").text(data);
             }
         },
         error: function () {
                 alert("something wrong");
         }
     });
-    $("#login_fields")[0].reset();
+
 });
 
 $('#registration_fields').on('valid.fndtn.abide', function () {
@@ -295,7 +318,8 @@ $('#registration_fields').on('valid.fndtn.abide', function () {
     var register_phone = $('#register_phone').val();
     var register_password = $('#register_password').val();
     $.post("user/register",
-        {'register_name':register_name, 'register_email':register_email, 'register_phone':register_phone, 'register_password':register_password},
+        {'register_name':register_name, 'register_email':register_email, 'register_phone':register_phone,
+            'register_password':register_password},
     function (response) {
             $("#registered_msg").html(response).show();
             setTimeout(function() { $("#registered_msg").hide(); }, 10000);
