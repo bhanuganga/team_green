@@ -4,7 +4,6 @@ function getCookie(name) {
         var cookies = document.cookie.split(';');
         for (var i = 0; i < cookies.length; i++) {
             var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
@@ -26,19 +25,20 @@ function setup(csrftoken) {
 }
 
 function refreshLoginForm() {
-    $(".loginFormInput").val(""),
-    $(".registerFormInput").val(""),
-    $(".loginDetailsForm div").removeClass("error"),
-    $(".loginDetailsForm label").removeClass("error"),
-    $(".registerDetails div").removeClass("error"),
-    $(".registerDetails label").removeClass("error")
+    $(".login_input").val(""),
+    $(".register_input").val(""),
+    $(".login_form div").removeClass("error"),
+    $(".register_form div").removeClass("error")
 }
 
+global_var = "";
+
+
 function login() {
+    if (!$(".login_form").submit().find(".error").is(":visible")){
     var email_id = $('#login_emailid').val();
     var password = $('#login_password').val();
     
-    if (email_id != '' && password != '') {
         var csrftoken = getCookie('csrftoken');
         setup(csrftoken);
 
@@ -49,24 +49,20 @@ function login() {
                 'email_id': email_id, 'password': password
             },
             success: function (response_data) {
-                $("#onsuccess").html(response_data);
+                refreshLoginForm();
+                global_var();
             }
         });
-    }
-    else{
-        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
     }
 }
 
 function signup() {
+    if (!$(".register_form").submit().find(".error").is(":visible")){
     var username = $('#username').val();
     var email_id = $('#email_id').val();
     var ph_no = $('#ph_no').val();
     var password = $('#password').val();
-    var re = /^[a-zA_Z]+[a-zA-Z0-9]+[ .]*$/;
 
-    if (re.test(username) && re.test(password) && ph_no != '' && email_id != '') {
         var csrftoken = getCookie('csrftoken');
         setup(csrftoken);
 
@@ -77,31 +73,24 @@ function signup() {
                 'username': username, 'email_id': email_id, 'ph_no':ph_no, 'password': password
             },
             success: function (response_data) {
-                $("#onsuccess").html(response_data);
-                $('#myModal').modal({
-                    backdrop: 'static',
-                    keyboard: false  // to prevent closing with Esc button (if you want this too)
-                })
+                var alertBox = '<div data-alert> Your account is created.  <a href="#" class="close"></a></div>';
+                    $("#created").empty().append(alertBox).foundation();
+                    $('#register_form')[0].reset();
             }
 
         });
     }
-
-    else{
-        var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
-    }
 }
 
 
-
-function add() {
+function add(name, date, info, cities, city_other) {
     var name = $('#name').val();
     var date = $('#date').val();
     var info = $('#info').val();
     var cities = $('#cities').val();
     var city_other = $('#city1').val();
     var re = /^[a-z.A-Z ]+[a-z.A-Z.0-9]+[ .]*$/;
+
 
     if(re.test(name) && date != "" && re.test(info)  && /^\w+$/.test(cities)) {
 
@@ -114,21 +103,35 @@ function add() {
             data:{
                 'name':name, 'date':date, 'info':info, 'cities':cities, 'city1': city_other
             },
+
             success:function (response_data) {
-                var alertBox = '<div data-alert class="alert-box success radius"> Event added successfully.  <a href="#" class="close">&times;</a></div>';
-                $("#onsuccess").append(alertBox).foundation().fadeOut(5000);
-                $('#add_form')[0].reset();
+                if (response_data == "Event added!") {
+                    var alertBox = '<div data-alert class="alert-box success radius"> Event added successfully.  <a href="#" class="close">&times;</a></div>';
+                    $("#message").empty().append(alertBox).foundation().fadeOut(5000);
+                    $('#add_form')[0].reset();
+                }
+                else if(response_data == 'Login to add event.'){
+                    var a=name, b=date, c=info, d=cities, e=city_other;
+
+                    $('#myModal').foundation('reveal', 'open');
+
+                    function tester(callback) {
+                        callback(arguments[1],arguments[2],arguments[3],arguments[4],arguments[5]);
+                    }
+                    tester(add,a,b,c,d,e);
+
+                }
             },
             error:function () {
                 var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
             }
         });
     }
 
     else{
         var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
+        $("#message").empty().append(alertBox).foundation().fadeOut(5000);
     }
 }
 
@@ -156,22 +159,22 @@ function search() {
         success: function (data) {
             if (data == "please select a name from list!") {
                 var alertBox = '<div data-alert class="alert-box success radius"> Select a name.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
             }
             else {
-                $('#onsuccess').html(data);
+                $('#message').html(data);
             }
         },
         error:function () {
             var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-            $("#message").append(alertBox).foundation().fadeOut(5000);
+            $("#message").empty().append(alertBox).foundation().fadeOut(5000);
         }
 
     });
 }
 
 
-function updat() {
+function updation() {
     var event_id = $('#event_id').val();
     var upd_name = $('#upd_name').val();
     var upd_date = $('#upd_date').val();
@@ -189,27 +192,33 @@ function updat() {
             url: "/update",
             data: {'id': event_id, 'upd_name': upd_name, 'upd_date': upd_date, 'upd_city': city, 'upd_info': upd_info},
             success: function (response) {
+                if (response == 'Updated') {
                     setTimeout(function () {
                         location.reload();
                     }, 5000);
                     var alertBox = '<div data-alert class="alert-box success radius"> Event updated.  <a href="#" class="close">&times;</a></div>';
-                    $("#message").append(alertBox).foundation().fadeOut(5000);
-                },
+                    $("#message").empty().append(alertBox).foundation().fadeOut(5000);
+                }
+                else if(response == 'Login to update event.'){
+                    $('#myModal').foundation('reveal', 'open');
+                    var upd = updation();
+                }
+            },
             error: function() {
                 var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
             }
         });
     }
 
     else{
         var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
+        $("#message").empty().append(alertBox).foundation().fadeOut(5000);
     }
 }
 
 
-function del() {
+function deletion() {
     var event_id = $('#event_id').val();
 
     var csrftoken = getCookie('csrftoken');
@@ -220,11 +229,17 @@ function del() {
         url: "/delete",
         data: {'id': event_id},
         success: function (response) {
-            setTimeout(function () {
-                location.reload();
-            },5000);
-            var alertBox = '<div data-alert class="alert-box success radius"> Event deleted.  <a href="#" class="close">&times;</a></div>';
-            $("#message").append(alertBox).foundation().fadeOut(5000);
+            if (response == 'Deleted') {
+                setTimeout(function () {
+                    location.reload();
+                }, 5000);
+                var alertBox = '<div data-alert class="alert-box success radius"> Event deleted.  <a href="#" class="close">&times;</a></div>';
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
+            }
+            else if(response == 'Login to delete event.'){
+                global_var= deletion();
+                $('#myModal').foundation('reveal', 'open');
+            }
         }
     });
 }
@@ -253,18 +268,18 @@ function bycity(){
         success: function (data) {
             if (data == 'no event found') {
                 var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                 setTimeout(function () {
                     location.reload();
                 },1000);
             }
             else {
-                $("#onsuccess").html(data);
+                $("#message").html(data);
             }
         },
         error:function () {
             var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-            $("#message").append(alertBox).foundation().fadeOut(5000);
+            $("#message").empty().append(alertBox).foundation().fadeOut(5000);
             setTimeout(function () {
                 location.reload();
             },1000);
@@ -288,18 +303,18 @@ function bydate(){
             success: function (data) {
                 if (data == 'no event found') {
                     var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
-                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                     setTimeout(function () {
                         location.reload();
                     },1000);
                 }
                 else {
-                    $("#onsuccess").html(data);
+                    $("#message").html(data);
                 }
             },
             error:function () {
                 var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                 setTimeout(function () {
                     location.reload();
                 },1000);
@@ -309,7 +324,7 @@ function bydate(){
 
     else{
         var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
+        $("#message").empty().append(alertBox).foundation().fadeOut(5000);
         setTimeout(function () {
             location.reload();
         },1000);
@@ -333,18 +348,18 @@ function date_city(){
             success: function (data) {
                 if (data == 'no event found') {
                     var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
-                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                     setTimeout(function () {
                         location.reload();
                     },1000);
                 }
                 else {
-                    $("#onsuccess").html(data);
+                    $("#message").html(data);
                 }
             },
             error:function () {
                 var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                 setTimeout(function () {
                     location.reload();
                 },1000);
@@ -354,7 +369,7 @@ function date_city(){
 
     else{
         var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
+        $("#message").empty().append(alertBox).foundation().fadeOut(5000);
         setTimeout(function () {
             location.reload();
         },1000);
@@ -378,18 +393,18 @@ function by_date_range(){
             success: function (data) {
                 if (data == 'no event found') {
                     var alertBox = '<div data-alert class="alert-box success radius"> No event found.  <a href="#" class="close">&times;</a></div>';
-                    $("#message").append(alertBox).foundation().fadeOut(5000);
+                    $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                     setTimeout(function () {
                         location.reload();
                     },1000);
                 }
                 else {
-                    $("#onsuccess").html(data);
+                    $("#message").html(data);
                 }
             },
             error:function () {
                 var alertBox = '<div data-alert class="alert-box alert radius"> Something wrong.  <a href="#" class="close">&times;</a></div>';
-                $("#message").append(alertBox).foundation().fadeOut(5000);
+                $("#message").empty().append(alertBox).foundation().fadeOut(5000);
                 setTimeout(function () {
                     location.reload();
                 },1000);
@@ -399,7 +414,7 @@ function by_date_range(){
 
     else{
         var alertBox = '<div data-alert class="alert-box warning radius"> One or more invalid fields.  <a href="#" class="close">&times;</a></div>';
-        $("#message").append(alertBox).foundation().fadeOut(5000);
+        $("#message").empty().append(alertBox).foundation().fadeOut(5000);
         setTimeout(function () {
             location.reload();
         },1000);

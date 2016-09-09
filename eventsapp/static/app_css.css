@@ -35,17 +35,17 @@
 
 #myModal{
     max-width: 110.5rem;
-    width: 95%;
+    width: 87%;
 }
 
-#login_form, #register_form{
+#login_form, #register_form {
     background-color: #EEEEEE;
     margin-left: -2%;
     padding-top: 3%;
 }
 
-#login_form{
-    padding-bottom: 3%;
+#login_form {
+    padding-bottom: 1%;
 }
 
 .form_heading span{
@@ -70,8 +70,6 @@ clear: left;
 table,td,th{
     border-collapse: collapse;
     border: 1px solid black;
-
-
    }
 
 table{
@@ -88,16 +86,6 @@ vertical-align: middle;
 }
 
 
-tr:nth-child(odd){
-background-color: 	#fbefcc;
-}
-
-th{
-background-color:#d9ad7c;
-}
-
-
-tr:nth-child(even) {background-color: #fff2df}
 option:hover{
 background-color:red;
 position:relative;

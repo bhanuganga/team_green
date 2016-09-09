@@ -32,8 +32,8 @@ urlpatterns = [
 
     url(r'^signed', signed),
 
-    url(r'^login', login),
     url(r'^logged_in', logged_in),
     url(r'^logout', logout),
+
 
 ]

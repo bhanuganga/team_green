@@ -6,7 +6,7 @@ class Cities(models.Model):
 
 
 class AddEvent(models.Model):
-    user_info = models.ForeignKey('User', 'email_id' )
+    user_info = models.ForeignKey('User', 'email_id')
     name = models.CharField(max_length=20)
     city = models.CharField(max_length=20)
     date = models.DateField()
