@@ -22,9 +22,9 @@
      {% endblock %}
   <ul class="header-subnav">
     <li ><a href="/" id="header-about">ABOUT</a></li>
-    <li><a href="add_event_html"  id="header-add-event">ADD EVENT</a></li>
-    <li> <a href="search_modify_html" id="header-search-modify">SEARCH/MODIFY</a></li>
-    <li><a href="/by_date_html" id="header-filter">FILTERS</a></li>
+    <li><a href="{% url 'eventsapp_add_event_html'%}"  id="header-add-event">ADD EVENT</a></li>
+    <li> <a href="{% url 'eventsapp_search_modify_html'%}" id="header-search-modify">SEARCH/MODIFY</a></li>
+    <li><a href="{% url 'eventsapp_by_date_html'%}" id="header-filter">FILTERS</a></li>
   </ul>
 </header>
 <!--  body here -->
