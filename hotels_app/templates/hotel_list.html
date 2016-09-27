@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+{% block image %}
+    <img src="static/img/download (3).jpg" alt="image">
+{% endblock image %}
+{% block body %}
+
+    <form  method="POST" class="customform">{% csrf_token %}
+        <br>
+        <div class="row">
+            <div class="small-4 large-4 small-centered large-centered columns">
+                <label for="hotel_name">Hotel Name</label><select name="hotel_name" id="hotel_name" onchange="check(this.value)">
+                    <option value="default">Select Your Hotel</option>
+                    {%for hotel in list_of_hotels%}
+                        <option value="{{hotel.Name}}">{{hotel.Name}}</option>
+                    {%endfor%}
+                    <option value="other">other</option>
+                </select><br><br>
+            <p id="para">*To Add new hotel select other option</p>
+            </div>
+            <div id="newhotel"   style="display: none">
+                <div class="small-4 small-centered large-centered columns">
+                <form>
+                    <label for="newhotelname"> HOTEL NAME:</label><input type="text" id="newhotelname"><p>*Use underscrolls between words</p>
+                    <label for="newrent">PER DAY COST:</label><input type="number" id="newrent">
+                    <div class="small-2 small-centered large-4 large-centered columns">
+                        <input type="button" class="button" value="ADD HOTEL" onclick="addnewhotel()">
+                    </div>
+                </form>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-2 small-centered  large-centered columns">
+                <input class="small button" onclick="searching()" id=search_button type="button" value="Next Step"><br><br>
+            </div>
+        </div>
+        <div id="hotel_result" class="row columns large-centered"></div>
+        <div id="error" class="row columns large-2 large-centered"></div>
+    </form>
+{% endblock %}

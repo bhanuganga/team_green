@@ -129,7 +129,6 @@ def by_date_range(request):
         if fromdate>todate:
             fromdate,todate=todate,fromdate
         list = Event.objects.filter(event_date__gte=fromdate).filter(event_date__lte=todate).order_by('event_date')
-        print list
         if not list:
             return HttpResponse('no event found')
         else:

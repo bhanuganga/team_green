@@ -4,18 +4,21 @@
 {% block body %}
     <div class="row large-centered ">
         <div class="columns">
-            <form id="add_form" method="POST" target="_self" class="customform " data-abide >
+            <form id="add_form" method="POST" target="_self" class="customform " data-abide >{% csrf_token %}
                 <div class="row ">
                     <div class="small-6 columns name-field">
                         Name : <input type="text" id=name name="name" placeholder="Event Name" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" >
+                        <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Name is required and must be a string.</small>
                     </div>
                     <div class="small-6 columns ">
                         Date : <input type="date" id=date name="date" required >
+                        <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Please pick the valid Date.</small>
                     </div>
                 </div>
 
                 <div class=row>
                     <div class="columns">Info : <input id=info type="text" placeholder="Event info" required maxlength="50" name="info" />
+                        <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Please add some info of the event.</small>
                     </div>
                 </div>
 
@@ -28,21 +31,24 @@
                         {%endfor%}
                         <option value="other">Other</option>
                         </select>
-                        <p>*to add newcity select other option</p><br>
+                    <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Select the valid City .</small>
+                        <p>*to add newcity select other option</p>
+                    <br>
                     </div>
                     <div class="small-6 columns">
                         <br><input type="text" name="city1" id="city1" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" style='display:none;' placeholder="Enter the city name manually"/>
                     </div>
                 </div>
-            </form>
-            <div class="row">
-                <div class="small-2 small-centered large-centered columns">
-                    <input class="medium button" id="add_button" type="button" onclick="add()" value="Add">
+                <div class="row">
+                    <div class="small-2 small-centered large-centered columns">
+                        <input class="medium button" id="add_button" type="button" onclick="add()" value="Add">
+                    </div>
                 </div>
-            </div>
+            </form>
             <div id="success"></div>
             <div id="error" ></div>
             <div id="regexerror" ></div>
         </div>
     </div>
+
 {% endblock%}

@@ -86,10 +86,11 @@ function login() {
                 if(response_data=='logged in') {
                     refreshforms();
                     callback();
-                    window.location.reload();
+                    setTimeout(function (){
+                        window.location.reload();
+                    },500);
                 }
                 else if(response_data !="Please Register"){
-                    //noinspection JSDuplicatedDeclaration
                     var alertBox = '<div data-alert class="alert-box warning">Your username and password doesnot match! <a href="#" class="close">&times;</a></div>';
                 $("#accounterror").empty().append(alertBox).foundation().fadeOut(5000);
 
@@ -129,8 +130,11 @@ function add() {
             success:function (response_data) {
 
                 if(response_data=='Event added!') {
-                    $("#success").html(response_data).fadeOut(5000);
+                    $("#success").html(response_data).fadeOut(2000);
                     $('#add_form')[0].reset();
+                    setTimeout(function () {
+                        location.reload()
+                    },1000);
                 }
                 else{
                     callback=add();
@@ -196,10 +200,10 @@ function update_event() {
             {'id': event_id,'email':email, 'upd_name':upd_name, 'upd_date':upd_date, 'upd_city':city, 'upd_info':upd_info},
             function (response) {
                 if(response=='EVENT UPDATED') {
-                    $("#success").html(response);
+                    $.when($("#search_result").html(response)).then(
                     setTimeout(function () {
-                        location.reload();
-                    }, 2500);
+                         window.location.reload();
+                    },1500))
                 }
                 else{
                      callback=update_event();
@@ -221,10 +225,10 @@ function delete_event() {
         {'id':event_id},
         function (response) {
             if(response=='EVENT DELETED') {
-                $("#success").html(response);
+                $("#search_result").html(response);
                 setTimeout(function () {
                     location.reload();
-                }, 1500);
+                }, 1000);
             }
             else {
                 callback=delete_event();

@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% block image %}
+    <img src="/static/img/reserved1.jpg" alt="image">
+{% endblock image %}
+{% block body %}
+
+    <div>
+    <table align="center">
+        <tr>
+            <th>NAME</th>
+            <th>FROM</th>
+            <th>TO</th>
+            <th>DAYS</th>
+            <th>NO. OF PERSONS</th>
+            <th>TOTAL AMOUNT</th>
+        </tr>
+
+        <tr>
+            <td colspan="6" align="center"><strong>BOOKED HOTELS</strong></td>
+        </tr>
+
+        {% for i in total_list%}
+            <tr>
+                <td>{{i.Hotel_name_id}}</td>
+                <td>{{ i.from_date }}</td>
+                <td> {{ i.to_date }}</td>
+                <td>{{i.Days}}</td>
+                <td>{{i.Persons}}</td>
+                <td>{{i.Total}}</td>
+            </tr>
+        {% endfor %}
+    <tr>
+        <td colspan="5">total amount</td>
+        <td>{{ total_amount }}</td>
+    </tr>
+
+    </table>
+    </div>
+    <div class="columns large-1 large-centered" style="margin-bottom:50px;">
+        <input class="button" type="button" onclick="cleardata()" value="CLEAR">
+    </div>
+    <script src="/static/js/script.js"></script>
+{% endblock %}

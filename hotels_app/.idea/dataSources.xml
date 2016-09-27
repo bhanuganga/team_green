@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="3992061035">
+    <data-source source="LOCAL" name="MySQL - hotels@localhost" uuid="e95fa585-6e4f-48a3-b207-161da26f733e">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/hotels</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>df9bdf9bdf9bdf9bdff5dfcbdfcbdfcbdfeb</user-password>
+      <schema-pattern>hotels.*</schema-pattern>
+      <default-schemas>hotels.*</default-schemas>
+      <driver-properties>
+        <property name="autoReconnect" value="true" />
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
+      </driver-properties>
+      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Django default" uuid="b3ccde23-7d74-473f-b8f5-fecc3720bc11">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql:///hotels</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>df9bdf9bdf9bdf9bdff5dfcbdfcbdfcbdfeb</user-password>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

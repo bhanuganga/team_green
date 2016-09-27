@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}<head>
+    <meta charset="UTF-8">
+    <title>{%block title%}Hotel_Booking{% endblock%}</title>
+
+    <link rel="stylesheet" href="/static/css/foundation.css">
+    <link rel="stylesheet" href="/static/css/foundation.min.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/app_css.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head>{% endblock %}
+<body>
+
+<div class="image">
+{% block image %}
+    <img src="/static/img/hotels-booking-img.jpg" alt="image">
+{% endblock image %}
+    <div class="button-group large-centered small-centered small-12 medium-centered medium-12">
+        <a class="button" id="mysite" href="/">My Site</a>
+        <a class="button" id="mysite1" href="hotels_list">BOOKING</a>
+        <a class="button" id="mysite2" href="cart">CART</a>
+    </div>
+
+    <div id="content">
+        {% block body %}
+            <div > <br>
+                <h6 style="text-align: center"><b>Here</b> you can book any hotel around the world .If hotel is not in the list you can<strong> ADD </strong>them while BOOKING.</h6>
+                
+                <div>
+                    <table align="center">
+                        <tr>
+                            <th>NAME</th>
+                            <th>RENT</th>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="4" align="center"><strong>LIST OF HOTELS</strong></td>
+                        </tr>
+                        {% for i in list_hotels%}
+                            <tr>
+                                <td>{{i.Name}}</td>
+                                <td>{{i.Rent}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+
+{% block footer %}
+<footer>
+
+        Copyright @ TEAM. All Rights Reserved
+
+</footer>
+{% endblock  %}
+<script type="text/javascript" src="/static/js/foundation.min.js"></script>
+<script type="text/javascript" src="/static/js/foundation/foundation.js"></script>
+<script type="text/javascript" src="/static/js/vendor/modernizr.js"></script>
+<script src="/static/js/script.js"></script>
+
+
+<script>
+   $(document).ready(function() {
+     $(document).foundation();
+   })
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 {% extends "mainpage.html" %}
 {% block title %}Searching{% endblock%}
 {% block body %}
-    <form  method="POST" class="customform">
+    <form  method="POST" class="customform">{% csrf_token %}
         <br>
         <div class="row">
             <div class="small-4 large-4 small-centered large-centered columns">
@@ -21,5 +21,4 @@
         <div id="search_result" class="row columns large-centered"></div>
         <div id="error"  class="row columns large-centered" ></div>
     </form>
-
 {% endblock%}

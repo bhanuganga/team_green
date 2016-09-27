@@ -45,7 +45,8 @@ function ajax(url,data) {
              },
              error: function () {
                  var alertBox = '<div data-alert class="alert-box alert">Something wrong  <a href="#" class="close">&times;</a></div>';
-                 $("#error").append(alertBox).foundation().fadeOut(6000);
+                 $("#error").append(alertBox).foundation().fadeOut(5000);
+                 setTimeout(function(){ location.reload(); }, 2500);
 
              }
 

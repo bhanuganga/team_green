@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="3640998311">
+  <component name="DataSourceManagerImpl" format="xml" hash="1983864507">
     <data-source source="LOCAL" name="MySQL - @localhost" uuid="f8ce284b-6fdc-42a7-8788-7d9a65c486f4">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
@@ -14,6 +14,16 @@
         <property name="characterSetResults" value="utf8" />
         <property name="yearIsDateType" value="false" />
       </driver-properties>
+      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Django default" uuid="075f8a08-3c63-48a7-b4f0-3de4f6b14ba5">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql:///data</jdbc-url>
+      <user-name>gouthami</user-name>
+      <user-password>dfc2dfcbdfc4dfdfdfc7dfcbdfc4dfc0dfc3df93</user-password>
+      <libraries />
     </data-source>
   </component>
 </project>
+

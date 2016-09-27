@@ -3,22 +3,25 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}normalize.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}app_css.css">
 {% block body %}
-    <form id="fetched_data"  method="post">{% csrf_token %}
+    <form id="fetched_data"  data-abide method="P">{% csrf_token %}
         <div class="section">
             <input type="hidden" name="id" id="event_id" value="{{id}}" >
             <input type="hidden" name="email" id="user_id" value="{{ instance.user_id }}">
             <div class="row ">
-                <div class="small-6 columns ">
+                <div class="small-6 columns name-feild">
                     Name : <input type="text" name="upd_name" id="upd_name" value="{{instance.event_name}}" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$">
+                    <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Name is required and must be a string.</small>
                 </div>
                 <div class="small-6 columns ">
                     Date : <input type="date" name="upd_date" id="upd_date" value="{{instance.event_date}}" required >
+                    <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Please pick the valid Date.</small>
                 </div>
             </div>
 
             <div class=row>
                 <div class="columns">
                     Info : <input type="text" required maxlength="50" name="upd_info" id="upd_info" value="{{instance.event_info}}" />
+                    <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Please add some info of the event.</small>
                 </div>
             </div>
 
@@ -29,7 +32,8 @@
                         {%for i in data%}
                             <option value="{{i.city}}">{{i.city}}</option>
                         {%endfor%}
-                    </datalist><br>
+                    </datalist>
+                    <small class="error errorMsg" style="margin-bottom:0;background-color:#f0f0f0;color:red;margin-top:1px">Select the valid City .</small><br>
                 </div>
             </div>
 
@@ -42,8 +46,6 @@
                 </div>
             </div>
         </div>
-        <div id="success"></div>
-        <div id="error" ></div>
         <div id="regexerror" ></div>
     </form>
 

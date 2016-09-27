@@ -1,0 +1,36 @@
+
+<form id="resultform">
+    <div class="row " >
+        <div class="columns large-8">
+
+            <input type="text" id="name" value={{ details.Name }} readonly>
+        </div>
+        <div class="columns large-4">
+            <input type="text" id="rent" value="{{ details.Rent }}" readonly>
+        </div>
+
+        <div class="columns large-6">
+            fromdate:<input id="fromdate" type="date">
+        </div>
+        <div class="columns large-6">
+            todate:<input id="todate" type="date" onclick="dateset()">
+        </div>
+        <div class="columns large-4 left">
+            No. of Persons:<input id="persons" type="number" min="1" step="1">
+        </div>
+        <div class="large-3 right">
+            <input class="button" type="button" onclick="booking()" value="BOOK">
+        </div>
+    </div>
+    <div id="amount" class="columns large-6 large-centered"></div>
+
+</form>
+<script>
+    var today = new Date().toISOString().split('T')[0];
+    $("#fromdate")[0].setAttribute('min', today);
+    function dateset(){
+        var date=$('#fromdate').val();
+        $("#todate")[0].setAttribute('min', date);
+
+    }
+</script>

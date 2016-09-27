@@ -20,7 +20,7 @@ def createaccount(request):
     email=request.POST.get('email')
     mobile=request.POST.get('mobile')
     password=request.POST.get('password')
-    list_of_mails=[emailid for emailid in Member.objects.values('e_mail')]
+    list_of_mails=[obj.e_mail for obj in Member.objects.all()]
     if email not in list_of_mails:
         instance=Member(user_name=username,mobile=mobile,e_mail=email,password=password)
         instance.save()
