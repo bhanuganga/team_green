@@ -1,0 +1,50 @@
+{% extends "filters.html" %}
+{% block title %}Upcoming and past Events{% endblock%}
+{% block content %}
+<table align="center">
+    <tr>
+    <th>NAME</th>
+    <th>DATE</th>
+    <th>CITY</th>
+    <th>INFORMATION</th>
+    </tr>
+        <tr>
+    <td colspan="4" class="td_heading"><strong>Today's events</strong></td>
+  </tr>
+
+       {% for event in today_list %}
+    <tr>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
+      </tr>
+        {% endfor %}
+    <tr>
+    <tr>
+    <td colspan="4" class="td_heading"><strong>Upcoming events</strong></td>
+  </tr>
+        {% for event in upcoming_list %}
+    <tr>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
+      </tr>
+        {% endfor %}
+    <tr>
+    <tr>
+    <td colspan="4" class="td_heading" ><strong>Past events</strong></td>
+  </tr>
+       {% for event in past_list %}
+    <tr>
+        <td>{{event.name}}</td>
+        <td>{{event.date}}</td>
+        <td>{{event.city}}</td>
+        <td>{{event.info}}</td>
+      </tr>
+        {% endfor %}
+    <tr>
+
+</table><br><br><br>
+{% endblock %}

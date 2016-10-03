@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}Searching...{% endblock%}
+{% block in_and_out %}<a id="in_page_logout" href="{% url 'logout' %}" class="button radius">Sign out</a>{% endblock %}
+{% block body %}
+<form class="customform">
+    <br>
+    <div class="row">
+        <div class="small-4 large-4 small-centered large-centered columns">
+            <label for="event_name">Events list</label><select name="event_name" id="event_is">
+            <option selected value="default">Select Your Event</option>
+        {%for event in events_list%}
+            <option value="{{event.id}}">{{event.name}}</option>
+        {%endfor%}
+        </select><br><br>
+    </div>
+    </div>
+    <div class="row">
+        <div class="small-2 small-centered large-centered columns">
+            <input class="small button" id=search_button type="button" value="Search">
+        </div>
+    </div>
+</form>
+   <div id=search_result class="row columns large-centered"></div>
+
+{% endblock%}

@@ -1,0 +1,30 @@
+{% extends "filters.html" %}
+
+{% block content %}
+
+<form>
+
+    <div class="row section">
+        <div class=" columns large-4 small-5  ">
+           <label for="date_in_date_city">Date </label><input type="date" id="date_in_date_city" name="date" />
+        </div>
+        <div class="columns large-4 small-5 ">
+            <label for="city_in_date_city">city </label>
+            <select name="city" id="city_in_date_city">
+                {%for city in data%}
+                    <option value="{{city.city_id}}">{{city.city_id}}</option>
+                {%endfor%}
+            </select>
+        </div>
+
+         <div id="date_city_btn" class="columns large-2 small-2 end ">
+            <input id="date_city_btn"  type="button" class="button postfix" value="submit"><br><br>
+        </div>
+
+    </div>
+</form>
+
+
+
+<div id=message class="row columns large-centered" ></div>
+{% endblock%}

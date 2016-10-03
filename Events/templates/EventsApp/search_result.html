@@ -1,0 +1,39 @@
+<form id="fetched_data" xmlns="http://www.w3.org/1999/html">
+    <div class="section">
+        <input type="hidden" name="id" id="event_id" value="{{id}}" >
+        <div class="row ">
+            <div class="columns small-5 small-offset-1">
+            <label for="upd_name">Name : </label><input type="text" name="upd_name" id="upd_name" value="{{instance.name}}" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$">
+            </div>
+            <div class="small-5 columns end">
+                <label for="upd_date">Date : </label><input type="date" name="upd_date" id="upd_date" value="{{instance.date}}" required >
+            </div>
+        </div>
+
+        <div class=row>
+            <div class="columns small-5 small-offset-1">
+                <label for="upd_info">Info : </label><input type="text" required maxlength="50" name="upd_info" id="upd_info" value="{{instance.info}}" />
+            </div>
+
+            <div class="columns small-5 end">
+                <label for="upd_city">City : </label>
+                <input type="text" name="upd_city" list="data_list" id="upd_city" value="{{ instance.city }}"
+                                                            pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" required>
+                    <datalist id="data_list">
+                    {%for obj in cities_list%}
+                         <option value="{{obj.place}}">{{obj.place}}</option>
+                    {%endfor%}
+                </datalist><br><br>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="large-2 medium-3 columns small-6 large-offset-4 medium-offset-4" >
+                <input class="small button" type="button" id="update_btn" value="Update">
+            </div>
+            <div class="large-2 medium-3  columns small-6 end">
+                <input class="small button" type="button" id="delete_btn"  value="Delete">
+            </div>
+        </div>
+    </div>
+</form>

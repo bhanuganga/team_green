@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}Add{% endblock%}
+{% block in_and_out %}
+    {% if user_name == "not signed in" %}
+        <a href="{% url 'logout' %}" style="display: none" class="button radius">Sign out</a>
+    {% else %}
+        <a href="{% url 'logout' %}" class="button radius">Sign out</a>
+    {% endif %}
+{% endblock %}
+{% block body %}
+<div class="row large-centered ">
+<div class="columns">
+<form id="add_form" class="customform" data-abide>
+        <div class="row ">
+            <div class="small-6 columns name-field">
+                <label for="name">Name : </label>
+                <input type="text" id=name name="name" placeholder="Event Name" required pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" >
+
+            </div>
+            <div class="small-6 columns ">
+                <label for="date">Date : </label><input type="date" id=date name="date" required >
+            </div>
+        </div>
+
+        <div class=row>
+            <div class="columns">
+                <label for="info">Info : </label>
+                <input id=info type="text" placeholder="Event info" required maxlength="50" name="info" /><br>   </div>
+        </div>
+
+        <div class="row">
+            <div class="small-6 columns">
+                <label for="cities">City : </label><select id='cities' name='city'>
+                  {% for city in data %}
+                <option value="{{city.place}}">{{city.place}}</option>
+                    {%endfor%}
+                <option value="Other">Other</option>
+                </select><br><br>
+            </div>
+            <div class="small-6 columns" id="extra">
+                <br><input type="text" name="city1" id="other_city" pattern="^[a-z.A-Z ]+[a-z.A-Z.0-9]{1,}[ .]{0,}$" placeholder="Enter the city name manually"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-2 small-centered large-centered columns">
+                <input class="medium button" id="add_button" type="button" value="Add">
+            </div>
+        </div>
+
+</form>
+</div>
+</div>
+{% endblock%}

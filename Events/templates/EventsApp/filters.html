@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Filters{% endblock%}
+{% block in_and_out %}
+    {% if user_name == 'not signed in' %}
+        <a href="{% url 'logout' %}" id="sign_out_in_filter" style="display:none" class="button radius">Sign out</a>
+    {% else %}
+        <a href="{% url 'logout' %}" class="button radius">Sign out</a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div id="filters_menu" class="row columns large-12 medium-12 small-12 large-centered ">
+    <ul class="breadcrumbs" >
+        <li><a href="{% url 'eventsapp_by_date_html'%}">LIST BY DATE</a></li>
+        <li><a href="{% url 'eventsapp_by_city_html'%}">LIST BY CITY</a></li>
+        <li><a href="{% url 'eventsapp_by_city_date_html'%}'">LIST BY DATE AND CITY</a></li>
+        <li><a href="{% url 'eventsapp_up_and_past'%}">UPCOMING AND PAST EVENTS</a></li>
+        <li><a href="{% url 'eventsapp_by_date_range_html'%}">LIST BY DATE RANGE</a></li>
+    </ul>
+</div>
+
+{% block content %}
+{% endblock %}
+
+{% endblock%}
+
